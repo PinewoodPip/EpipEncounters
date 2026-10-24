@@ -278,53 +278,6 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
-function PlayerInfo.SetBH(_, element, stacks, visible, height)
-    if not PlayerInfo._OverrideApplied then return end
-    element.visible = visible
-
-    if element.visible then
-        element.scaleX = PlayerInfo.BH_DISPLAY_SCALE
-        element.scaleY = PlayerInfo.BH_DISPLAY_SCALE
-
-        element.x = 0
-        element.y = height
-
-        element.alpha = 1
-
-        -- Fade out at low stacks
-        if stacks < 7 then
-            element.alpha = PlayerInfo.LOW_BH_OPACITY
-        end
-
-        -- Show the right graphic for the current stack amount - hide others
-        for i=1,10,1 do
-            local numeral = "numeral_" .. i
-            element[numeral].visible = i == stacks
-        end
-    end
-end
-
----Updates the BH indicators for a player.
----@param player FlashMovieClip
-function PlayerInfo._UpdateBH(player)
-    if not PlayerInfo._OverrideApplied then return end
-    local char = Character.Get(player.characterHandle, true)
-
-    local displaysVisible = PlayerInfo.Hooks.GetBHVisibility:Throw({
-        Visible = true,
-        Character = char
-    }).Visible
-
-    local battered = displaysVisible and BH.GetStacks(char, "B") or 0
-    local harried = displaysVisible and BH.GetStacks(char, "H") or 0
-
-    local batteredDisplay = player.battered_mc
-    local harriedDisplay = player.harried_mc
-
-    PlayerInfo.SetBH(player, batteredDisplay, battered, displaysVisible, 20)
-    PlayerInfo.SetBH(player, harriedDisplay, harried, displaysVisible, 69)
-end
-
 function PlayerInfo.UpdatePlayers()
     if not PlayerInfo._OverrideApplied then return end
     local root = PlayerInfo:GetRoot()
@@ -365,6 +318,73 @@ end
 ---@param handle EntityHandle
 function PlayerInfo.SelectCharacter(handle)
     PlayerInfo:ExternalInterfaceCall("charSel", Ext.UI.HandleToDouble(handle), true)
+end
+
+local _LastPlayerBHStates = {} ---@type table<FlashCharacterHandle, {Battered: integer, Harried: integer, Visible: boolean}> Cached to avoid updating the UI unnecessarily.
+---Updates the BH indicators for a player.
+---@param player FlashMovieClip
+function PlayerInfo._UpdateBH(player)
+    if not PlayerInfo._OverrideApplied then return end
+    local char = Character.Get(player.characterHandle, true)
+    local lastState = _LastPlayerBHStates[player.characterHandle]
+    if not lastState then
+        lastState = {
+            Battered = nil,
+            Harried = nil,
+            Visible = nil,
+        }
+        _LastPlayerBHStates[player.characterHandle] = lastState
+    end
+
+    local displaysVisible = PlayerInfo.Hooks.GetBHVisibility:Throw({
+        Visible = true,
+        Character = char
+    }).Visible
+
+    local battered = displaysVisible and BH.GetStacks(char, "B") or 0
+    local harried = displaysVisible and BH.GetStacks(char, "H") or 0
+
+    if lastState.Battered ~= battered or lastState.Visible ~= displaysVisible then
+        PlayerInfo._SetBH(player.battered_mc, battered, displaysVisible, 20)
+    end
+    if lastState.Harried ~= harried or lastState.Visible ~= displaysVisible then
+        PlayerInfo._SetBH(player.harried_mc, harried, displaysVisible, 69)
+    end
+
+    lastState.Battered = battered
+    lastState.Harried = harried
+    lastState.Visible = displaysVisible
+end
+
+---Updates the Battered/Harried elements.
+---@param element FlashMovieClip
+---@param stacks integer
+---@param visible boolean
+---@param height number
+function PlayerInfo._SetBH(element, stacks, visible, height)
+    if not PlayerInfo._OverrideApplied then return end
+    element.visible = visible
+
+    if element.visible then
+        element.scaleX = PlayerInfo.BH_DISPLAY_SCALE
+        element.scaleY = PlayerInfo.BH_DISPLAY_SCALE
+
+        element.x = 0
+        element.y = height
+
+        element.alpha = 1
+
+        -- Fade out at low stacks
+        if stacks < EpicEncounters.BatteredHarried.T3_STACKS_REQUIREMENT then
+            element.alpha = PlayerInfo.LOW_BH_OPACITY
+        end
+
+        -- Show the right graphic for the current stack amount - hide others
+        for i=1,10,1 do
+            local numeral = "numeral_" .. i
+            element[numeral].visible = i == stacks
+        end
+    end
 end
 
 ---------------------------------------------
