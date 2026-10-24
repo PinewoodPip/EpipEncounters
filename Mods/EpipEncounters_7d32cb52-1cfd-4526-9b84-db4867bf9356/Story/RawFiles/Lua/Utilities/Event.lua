@@ -43,6 +43,9 @@ local PreventableEventParams = {
 }
 setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 
+local SubscribableEventParamsMetatable = {__index = SubscribableEventParams}
+local PreventableEventParamsMetatable = {__index = PreventableEventParams}
+
 ---------------------------------------------
 -- COMMON EVENT PARAMETER CLASSES
 ---------------------------------------------
@@ -221,11 +224,7 @@ function SubscribableEvent:Throw(event)
 	event = event or {}
 
 	if type(event) == "table" then
-		if self.Preventable then
-			Inherit(event, PreventableEventParams)
-		else
-			Inherit(event, SubscribableEventParams)
-		end
+		setmetatable(event, self.Preventable and PreventableEventParamsMetatable or SubscribableEventParamsMetatable)
 	end
 
 	while cur ~= nil do
