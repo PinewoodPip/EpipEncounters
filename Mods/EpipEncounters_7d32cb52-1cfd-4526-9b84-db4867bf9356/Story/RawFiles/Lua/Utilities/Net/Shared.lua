@@ -7,6 +7,8 @@ Net = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    _NetEvents = {}, ---@type table<string, Event>
+
     Events = {
         MessageReceived = {}, ---@type Event<Net_Event_MessageReceived>
     },
@@ -31,7 +33,7 @@ function _Payload:___Create(data)
     local instance = self:__Create(data) ---@cast instance NetLib_Message
 
     -- Cast position field to vector.
-    local positionField = instance["Position"]
+    local positionField = rawget(instance, "Position") -- Avoid OOP parent class lookup.
     if positionField and type(positionField) == "table" then
         ---@cast instance NetLib_Message_Position
         instance.Position = Vector.Create(positionField)
@@ -157,7 +159,11 @@ end
 ---@param channel `T`
 ---@param func fun(payload:`T`)
 function Net.RegisterListener(channel, func)
-    local event = Net._GetChannelMessageEvent(channel)
+    local event = Net._NetEvents[channel]
+    if not event then
+        event = SubscribableEvent:New("Net." .. channel)
+        Net._NetEvents[channel] = event
+    end
 
     event:Subscribe(function (ev)
         ---@diagnostic disable-next-line: redundant-parameter, undefined-field
@@ -165,46 +171,43 @@ function Net.RegisterListener(channel, func)
     end)
 end
 
----Returns the event associated with the passed message channel.
----@generic T
----@param channel string`T`
----@return Event<Net_Event_MessageReceived<`T`>>
-function Net._GetChannelMessageEvent(channel)
-    local event = Net.Events[channel]
-
-    if not event then
-        event = Net:AddSubscribableEvent(channel)
-    end
-
-    return event
-end
-
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 -- Forward Net messages to corresponding events.
+local _Events = Net._NetEvents
+local _MessageReceivedEvent = Net.Events.MessageReceived
+local _CreatePayload = _Payload.___Create
 Ext.Events.NetMessageReceived:Subscribe(function(ev)
+    local subscribableEvent = _Events[ev.Channel]
+    if not subscribableEvent then return end -- The channel might not be from Epip.
+
     -- Try parsing json payloads
     local rawPayload = ev.Payload -- Fallback if parsing fails (ex. a raw string payload)
     local success, parsedPayload = pcall(Ext.Json.Parse, ev.Payload) -- Note: parse returns non-string for non-string primitives.
     if success then
         rawPayload = parsedPayload
     end
-    local payload
 
     -- Only create a Payload instance if the message was a table.
+    local payload
     if type(rawPayload) == "table" then
-        payload = _Payload:___Create(rawPayload)
+        payload = _CreatePayload(_Payload, rawPayload)
     else
         payload = rawPayload
     end
 
-    local event = {Message = payload, Channel = ev.Channel, UserID = ev.UserID} ---@type Net_Event_MessageReceived
-    local subscribableEvent = Net._GetChannelMessageEvent(ev.Channel)
-
+    ---@type Net_Event_MessageReceived
+    local event = {
+        Message = payload,
+        Channel = ev.Channel,
+        UserID = ev.UserID,
+    }
     subscribableEvent:Throw(event)
 
     -- The generic listener goes last.
-    Net.Events.MessageReceived:Throw(event)
+    if _MessageReceivedEvent.First then
+        _MessageReceivedEvent:Throw(event)
+    end
 end)
