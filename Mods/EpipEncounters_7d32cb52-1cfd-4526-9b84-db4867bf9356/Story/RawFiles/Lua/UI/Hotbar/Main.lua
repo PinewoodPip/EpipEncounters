@@ -1033,11 +1033,6 @@ Hotbar:RegisterInvokeListener("showSkillBar", function (_, enabled)
     Hotbar.elementsToggled = enabled
 end, "After")
 
--- Listen for engine requests to refresh slots.
-Hotbar:RegisterInvokeListener("updateSlots", function (_, _, _)
-    Hotbar.Refresh()
-end)
-
 -- Listen for player handle being set.
 Hotbar:RegisterInvokeListener("setPlayerHandle", function (_, playerHandle)
     Hotbar.UpdateSlotTextures()
@@ -1049,8 +1044,9 @@ Hotbar:RegisterInvokeListener("setPlayerHandle", function (_, playerHandle)
     Hotbar.RenderSlots()
 end, "After")
 
--- Update slots whenever the engine would request so.
+-- Update hotbar & slots whenever the engine would request so.
 Hotbar:RegisterInvokeListener("updateSlots", function (_, _)
+    Hotbar.Refresh()
     Hotbar.RenderSlots()
 end)
 
