@@ -1153,13 +1153,11 @@ GameState.Events.GameReady:Subscribe(function ()
     Hotbar.Refresh()
 end, {EnabledFunctor = function () return not Client.IsUsingController() end})
 
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    local actionPattern = "EpipEncounters_Hotbar_(%d+)"
-    local index = ev.Action.ID:match(actionPattern)
-    if index then
-        Hotbar.PressHotkey(tonumber(index))
-    end
-end)
+for i=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
+    Client.Input.RegisterActionExecutedListener("EpipEncounters_Hotbar_" .. i, function (_)
+        Hotbar.PressHotkey(i)
+    end)
+end
 
 -- Refresh the hotbar elements preiodically.
 GameState.Events.RunningTick:Subscribe(function (e)

@@ -475,13 +475,9 @@ end
 ---------------------------------------------
 
 -- Apply keybind effects.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    local action = ev.Action
-    if action == InputActions.Undo then
-        Assprite.Undo()
-    elseif action == InputActions.Redo then
-        Assprite.Redo()
-    end
-end, {EnabledFunctor = function ()
-    return Assprite.IsEditing()
-end})
+Client.Input.RegisterActionExecutedListener(InputActions.Undo, function (_)
+    Assprite.Undo()
+end, {EnabledFunctor = Assprite.IsEditing})
+Client.Input.RegisterActionExecutedListener(InputActions.Redo, function (_)
+    Assprite.Redo()
+end, {EnabledFunctor = Assprite.IsEditing})

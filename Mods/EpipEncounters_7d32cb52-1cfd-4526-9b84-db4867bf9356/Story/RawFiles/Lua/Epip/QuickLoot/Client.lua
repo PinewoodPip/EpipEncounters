@@ -16,6 +16,11 @@ QuickLoot.CONTAINER_EFFECT = "PIP_FX_PerceptionReveal_OverlayOnly"
 QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Search>
 QuickLoot._IsStealSearchActive = false
 
+QuickLoot:RegisterInputAction("Search", {
+    Name = TSK.InputAction_Search_Name,
+    Description = TSK.InputAction_Search_Description,
+})
+
 ---@class Features.QuickLoot.Search
 ---@field EffectHandle ComponentHandle
 ---@field MultiVisualHandle ComponentHandle
@@ -466,32 +471,28 @@ QuickLoot.Hooks.IsCorpseLootable:Subscribe(function (ev)
 end, {StringID = "DefaultImplementation.LineOfSight"})
 
 -- Start & stop searches when the action is pressed & released.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == QuickLoot.InputActions.Search.ID then
-        local char = Client.GetCharacter()
+Input.RegisterActionExecutedListener(QuickLoot.InputActions.Search, function (_)
+    local char = Client.GetCharacter()
 
-        -- If the character is moving, attempt to stop them first.
-        if Character.IsMoving(char) and Client.IsUsingKeyboardAndMouse() then
-            Client.Input.Inject("Mouse", "right2", "Pressed")
-            Client.Input.Inject("Mouse", "right2", "Released")
-        end
+    -- If the character is moving, attempt to stop them first.
+    if Character.IsMoving(char) and Client.IsUsingKeyboardAndMouse() then
+        Client.Input.Inject("Mouse", "right2", "Pressed")
+        Client.Input.Inject("Mouse", "right2", "Released")
+    end
 
-        if QuickLoot.CanSearch(char) then
-            local isStealing = Character.IsSneaking(char)
-            QuickLoot.StartSearch(char, isStealing)
-            local notificationText = isStealing
-                and TSK.Notification_Stealing:Format({Color = Color.LARIAN.RED})
-                or TSK.Notification_Searching:GetString()
-            Notification.ShowWarning(notificationText, 0.5)
-        end
+    if QuickLoot.CanSearch(char) then
+        local isStealing = Character.IsSneaking(char)
+        QuickLoot.StartSearch(char, isStealing)
+        local notificationText = isStealing
+            and TSK.Notification_Stealing:Format({Color = Color.LARIAN.RED})
+            or TSK.Notification_Searching:GetString()
+        Notification.ShowWarning(notificationText, 0.5)
     end
 end)
-Input.Events.ActionReleased:Subscribe(function (ev)
-    if ev.Action.ID == QuickLoot.InputActions.Search.ID then
-        local char = Client.GetCharacter()
-        if QuickLoot.IsSearching(char) then
-            QuickLoot.StopSearch(char)
-        end
+Input.RegisterActionReleasedListener(QuickLoot.InputActions.Search, function (_)
+    local char = Client.GetCharacter()
+    if QuickLoot.IsSearching(char) then
+        QuickLoot.StopSearch(char)
     end
 end)
 

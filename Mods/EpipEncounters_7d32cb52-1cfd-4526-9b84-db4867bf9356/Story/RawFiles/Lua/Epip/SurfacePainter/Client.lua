@@ -35,8 +35,6 @@ end
 ---------------------------------------------
 
 -- Listen for the Paint input action.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action:GetID() == InputActions.Paint:GetID() then
-        SurfacePainter.RequestPaint()
-    end
+Input.RegisterActionExecutedListener(InputActions.Paint, function (_)
+    SurfacePainter.RequestPaint()
 end)

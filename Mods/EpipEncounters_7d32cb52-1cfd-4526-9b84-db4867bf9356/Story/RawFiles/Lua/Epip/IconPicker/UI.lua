@@ -128,8 +128,6 @@ end
 -- Register the UI as the default picker.
 Picker.SetDefaultUI(UI)
 
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == "EpipEncounters_Debug_Generic" then
-        Picker.Open("test")
-    end
+Client.Input.RegisterActionExecutedListener("EpipEncounters_Debug_Generic", function (_)
+    Picker.Open("test")
 end)

@@ -70,10 +70,8 @@ function Tool:__RegisterInputAction(defaultKeys)
     })
 
     -- Bruh doing this here is so fucking dirty lmao TODO
-    Input.Events.ActionExecuted:Subscribe(function (ev)
-        if ev.Action == action then
-            Assprite.UI.SelectTool(self)
-        end
+    Input.RegisterActionExecutedListener(action, function (_)
+        Assprite.UI.SelectTool(self)
     end, {EnabledFunctor = function ()
         return Assprite.UI:IsVisible()
     end})

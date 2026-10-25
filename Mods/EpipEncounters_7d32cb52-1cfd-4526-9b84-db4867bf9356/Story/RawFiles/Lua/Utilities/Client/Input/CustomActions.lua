@@ -7,6 +7,8 @@ Input._InputMap = {} ---@type table<string, string[]> Maps inputs to a list of a
 Input._lastActionMapping = nil
 Input._CurrentAction = nil ---@type string? ID of the action whose mapping is currently being held.
 Input._ActionBindingSettingPrefix = "InputLib_Binding_"
+Input._ActionExecutedListeners = {} ---@type table<string, Event<InputLib.Events.ActionEvent>> Maps action ID to events for ActionExecuted listeners specific to it.
+Input._ActionReleasedListeners = {} ---@type table<string, Event<InputLib.Events.ActionEvent>> Maps action ID to events for ActionReleased listeners specific to it.
 
 Input.ACTIONS_SAVE_FORMAT = 1
 Input.ACTIONS_SAVE_FILENAME = "EpipEncounters_Input.json"
@@ -27,7 +29,7 @@ Input.ACTION_WHITELISTED_MOUSE_INPUTS = {
 -- EVENTS
 ---------------------------------------------
 
----@class InputLib_Event_ActionExecuted
+---@class InputLib.Events.ActionEvent
 ---@field Character EclCharacter
 ---@field Action InputLib_Action
 
@@ -190,6 +192,40 @@ function Input.CanExecuteAction(actionID)
     return canExecute
 end
 
+---Subscribes a listener to ActionExecuted that will only run for the given action.
+---@param action InputLib_Action|string
+---@param callback fun(ev: InputLib.Events.ActionEvent)
+---@param options Event_Options?
+---@return integer -- Listener index, for use with `UnsubscribeActionExecutedListener()`.
+function Input.RegisterActionExecutedListener(action, callback, options)
+    return Input._SubscribeActionEvent(Input._ActionExecutedListeners, "ActionExecuted", action, callback, options)
+end
+
+---Unsubscribes an ActionExecuted listener registered specifically for the given action.
+---@see InputLib.RegisterActionExecutedListener
+---@param action InputLib_Action|string
+---@param listenerID string|integer Index returned by `RegisterActionExecutedListener()`, or the `StringID` passed in its options.
+function Input.UnsubscribeActionExecutedListener(action, listenerID)
+    Input._UnsubscribeActionEvent(Input._ActionExecutedListeners, "ActionExecuted", action, listenerID)
+end
+
+---Subscribes a listener to ActionReleased that will only run for the given action.
+---@param action InputLib_Action|string
+---@param callback fun(ev: InputLib.Events.ActionEvent)
+---@param options Event_Options?
+---@return integer -- Listener index, for use with `UnsubscribeActionReleasedListener()`.
+function Input.RegisterActionReleasedListener(action, callback, options)
+    return Input._SubscribeActionEvent(Input._ActionReleasedListeners, "ActionReleased", action, callback, options)
+end
+
+---Unsubscribes an ActionReleased listener registered specifically for the given action.
+---@see InputLib.RegisterActionReleasedListener
+---@param action InputLib_Action|string
+---@param listenerID string|integer The `StringID` or subscriber index returned by `RegisterActionReleasedListener()`.
+function Input.UnsubscribeActionReleasedListener(action, listenerID)
+    Input._UnsubscribeActionEvent(Input._ActionReleasedListeners, "ActionReleased", action, listenerID)
+end
+
 ---Returns the action currently being held.
 ---@return InputLib_Action? -- `nil` if no action is being held.
 function Input.GetCurrentAction()
@@ -271,6 +307,37 @@ function Input._SaveActionBindings()
     Settings.Save("InputLib")
 end
 
+---Subscribes a listener to an action-specific event.
+---@param listeners table<string, Event<InputLib.Events.ActionEvent>>
+---@param eventName "ActionExecuted"|"ActionReleased"
+---@param action InputLib_Action|string
+---@param callback fun(ev: InputLib.Events.ActionEvent)
+---@param options Event_Options?
+---@return integer -- Listener index.
+function Input._SubscribeActionEvent(listeners, eventName, action, callback, options)
+    local actionID = type(action) == "string" and action or action.ID -- String overload.
+    local actionEvent = listeners[actionID]
+    if not actionEvent then
+        actionEvent = SubscribableEvent:New("InputLib." .. eventName .. "." .. actionID, false) -- We do not want to use the Library AddSubscribableEvent function as it would pollute the InputLib.Events table.
+        listeners[actionID] = actionEvent
+    end
+    return actionEvent:Subscribe(callback, options)
+end
+
+---Unsubscribes a listener from an action-specific event.
+---@param listeners table<string, Event<InputLib.Events.ActionEvent>>
+---@param eventName "ActionExecuted"|"ActionReleased"
+---@param action InputLib_Action|string
+---@param listenerID string|integer
+function Input._UnsubscribeActionEvent(listeners, eventName, action, listenerID)
+    local actionID = type(action) == "string" and action or action.ID -- String overload.
+    local actionEvent = listeners[actionID]
+    if not actionEvent then
+        Input:__Error("Unsubscribe" .. eventName .. "Listener", "Action " .. actionID .. " has no " .. eventName .. " listeners specific to it")
+    end
+    actionEvent:Unsubscribe(listenerID)
+end
+
 ---Fires the event for actions being released.
 function Input._FireActionReleasedEvent()
     local action = Input.GetAction(Input._CurrentAction)
@@ -316,6 +383,20 @@ Input.Hooks.CanExecuteAction:Subscribe(function (ev)
     end
 
     ev.CanExecute = execute
+end)
+
+-- Forward ActionExecuted & ActionReleased events to listeners registered for a specific action.
+Input.Events.ActionExecuted:Subscribe(function (ev)
+    local actionEvent = Input._ActionExecutedListeners[ev.Action.ID]
+    if actionEvent then
+        actionEvent:Throw(ev)
+    end
+end)
+Input.Events.ActionReleased:Subscribe(function (ev)
+    local actionEvent = Input._ActionReleasedListeners[ev.Action.ID]
+    if actionEvent then
+        actionEvent:Throw(ev)
+    end
 end)
 
 -- TODO clean this up - this is still a remnant from the time this was coupled to OptionsInput

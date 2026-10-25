@@ -82,31 +82,33 @@ end
 ---------------------------------------------
 
 -- Listen for keys being pressed that should select/deselect items.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    local item = Item.Get(ContainerSelections._CurrentHoveredItemHandle)
-    if ev.Action == MultiSelect.InputActions.ToggleSelection then
-        ContainerSelections.ToggleItemSelection(item)
-    elseif ev.Action == MultiSelect.InputActions.SelectRange and MultiSelect.HasSelection() then
-        local orderedSelections = MultiSelect.GetOrderedSelections("ContainerInventory") ---@cast orderedSelections Features.InventoryMultiSelect.Selection.PartyInventory[]
-        local firstSelection = orderedSelections[1]
-        local _, cellIndex = ContainerInventory.GetItemCell(item)
-        local cells = ContainerInventory.GetCells()
-
-        -- Range selection works in either direction; can select ranges before or after the first item.
-        local startIndex = math.min(firstSelection.CellIndex, cellIndex)
-        local endIndex = math.max(firstSelection.CellIndex, cellIndex)
-        for i=startIndex,endIndex,1 do -- Select all cells in the range that have an item.
-            local cell = cells[i]
-            if cell.itemHandle ~= 0 then
-                ContainerSelections.ToggleItemSelection(Item.Get(cell.itemHandle, true), true)
-            end
-        end
-
-        ContainerSelections:DebugLog("It's not quite as thrilling the second time around, yet at the same time, I'm far more impressed by the multi-select feature now that container inventories work - and simultaneously with selections in the party inventory too!")
-    end
-end, {EnabledFunctor = function ()
+local function IsHoveringItem()
     return ContainerSelections._CurrentHoveredItemHandle and MultiSelect:IsEnabled()
-end})
+end
+Input.RegisterActionExecutedListener(MultiSelect.InputActions.ToggleSelection, function (_)
+    local item = Item.Get(ContainerSelections._CurrentHoveredItemHandle)
+    ContainerSelections.ToggleItemSelection(item)
+end, {EnabledFunctor = IsHoveringItem})
+Input.RegisterActionExecutedListener(MultiSelect.InputActions.SelectRange, function (_)
+    if not MultiSelect.HasSelection() then return end
+    local item = Item.Get(ContainerSelections._CurrentHoveredItemHandle)
+    local orderedSelections = MultiSelect.GetOrderedSelections("ContainerInventory") ---@cast orderedSelections Features.InventoryMultiSelect.Selection.PartyInventory[]
+    local firstSelection = orderedSelections[1]
+    local _, cellIndex = ContainerInventory.GetItemCell(item)
+    local cells = ContainerInventory.GetCells()
+
+    -- Range selection works in either direction; can select ranges before or after the first item.
+    local startIndex = math.min(firstSelection.CellIndex, cellIndex)
+    local endIndex = math.max(firstSelection.CellIndex, cellIndex)
+    for i=startIndex,endIndex,1 do -- Select all cells in the range that have an item.
+        local cell = cells[i]
+        if cell.itemHandle ~= 0 then
+            ContainerSelections.ToggleItemSelection(Item.Get(cell.itemHandle, true), true)
+        end
+    end
+
+    ContainerSelections:DebugLog("It's not quite as thrilling the second time around, yet at the same time, I'm far more impressed by the multi-select feature now that container inventories work - and simultaneously with selections in the party inventory too!")
+end, {EnabledFunctor = IsHoveringItem})
 
 -- Listen for item drags being started, to prevent them if they were to start a multi-drag.
 ContainerInventory:RegisterCallListener("startDragging", function (ev, itemHandle)

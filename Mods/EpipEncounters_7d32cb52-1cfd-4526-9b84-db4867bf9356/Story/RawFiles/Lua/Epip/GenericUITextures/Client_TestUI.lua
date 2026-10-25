@@ -328,8 +328,6 @@ Ext.RegisterConsoleCommand("genericstyles", function (_, _)
 end)
 
 -- Open the UI through the Input action.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action == GenericUITextures.InputActions.OpenTestUI then
-        UI:Show()
-    end
+Client.Input.RegisterActionExecutedListener(GenericUITextures.InputActions.OpenTestUI, function (_)
+    UI:Show()
 end)

@@ -51,18 +51,16 @@ Hotbar.Hooks.UpdateEngineActions:Subscribe(function (ev)
 end)
 
 -- Listen for keybinds to toggle bar visibility.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == Tweaks.TOGGLE_BARS_KEYBIND then
-        Tweaks.barsVisible = not Tweaks.barsVisible
+Client.Input.RegisterActionExecutedListener(Tweaks.TOGGLE_BARS_KEYBIND, function (_)
+    Tweaks.barsVisible = not Tweaks.barsVisible
 
-        Tweaks:DebugLog("Toggling bar visibility")
-        Hotbar.Refresh()
+    Tweaks:DebugLog("Toggling bar visibility")
+    Hotbar.Refresh()
 
-        -- Show notification for new state
-        local notification = Tweaks.barsVisible and TSK.Notification_ToggleBarVisibility_On or TSK.Notification_ToggleBarVisibility_Off
-        notification = notification:GetString()
-        Notification.ShowNotification(notification)
-    end
+    -- Show notification for new state
+    local notification = Tweaks.barsVisible and TSK.Notification_ToggleBarVisibility_On or TSK.Notification_ToggleBarVisibility_Off
+    notification = notification:GetString()
+    Notification.ShowNotification(notification)
 end)
 
 -- Toggle visibility back on when the +/- buttons are pressed.

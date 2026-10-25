@@ -96,15 +96,13 @@ end
 ---------------------------------------------
 
 -- Show or hide the overheads when the input action is toggled.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action == BHOverheads.InputActions.Show and BHOverheads:IsEnabled() then
+Input.RegisterActionExecutedListener(BHOverheads.InputActions.Show, function (_)
+    if BHOverheads:IsEnabled() then
         BHOverheads.Show()
     end
 end)
-Input.Events.ActionReleased:Subscribe(function (ev)
-    if ev.Action == BHOverheads.InputActions.Show then
-        BHOverheads.Hide()
-    end
+Input.RegisterActionReleasedListener(BHOverheads.InputActions.Show, function (_)
+    BHOverheads.Hide()
 end)
 
 -- Default implementation of IsEligible.

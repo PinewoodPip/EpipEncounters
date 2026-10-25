@@ -424,12 +424,10 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == InputActions.Open:GetID() then
-        local char = Pointer.GetCurrentCharacter(nil, true)
+Client.Input.RegisterActionExecutedListener(InputActions.Open, function (_)
+    local char = Pointer.GetCurrentCharacter(nil, true)
 
-        QuickExamine.SetEntity(char, true)
-    end
+    QuickExamine.SetEntity(char, true)
 end)
 
 -- Update the entity when the health bar updates.

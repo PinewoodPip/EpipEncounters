@@ -543,26 +543,24 @@ end
 ---------------------------------------------
 
 -- Toggle the UI when the action is used.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == RadialMenus.InputActions.OpenRadialMenu.ID then
-        if UI:IsVisible() then
-            UI:Hide()
-        else
-            UI.Setup()
-        end
+Input.RegisterActionExecutedListener(RadialMenus.InputActions.OpenRadialMenu, function (_)
+    if UI:IsVisible() then
+        UI:Hide()
+    else
+        UI.Setup()
     end
 end)
 
 -- Scroll menus when the actions are used.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == RadialMenus.InputActions.NextMenu.ID then
-        UI.ScrollMenus(1)
-    elseif ev.Action.ID == RadialMenus.InputActions.PreviousMenu.ID then
-        UI.ScrollMenus(-1)
-    end
-end, {EnabledFunctor = function ()
+local function IsUIVisible()
     return UI:IsVisible()
-end})
+end
+Input.RegisterActionExecutedListener(RadialMenus.InputActions.NextMenu, function (_)
+    UI.ScrollMenus(1)
+end, {EnabledFunctor = IsUIVisible})
+Input.RegisterActionExecutedListener(RadialMenus.InputActions.PreviousMenu, function (_)
+    UI.ScrollMenus(-1)
+end, {EnabledFunctor = IsUIVisible})
 Input.Hooks.CanExecuteAction:Subscribe(function (ev)
     -- Only consume cycler input actions when the UI is visible.
     if ev.Action.ID == RadialMenus.InputActions.NextMenu.ID or ev.Action.ID == RadialMenus.InputActions.PreviousMenu.ID then

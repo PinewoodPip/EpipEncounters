@@ -46,10 +46,6 @@ UI._HighlightedEntityHandle = nil ---@type ItemHandle? The entity currently high
 
 UI.Hooks.GetSettings = UI:AddSubscribableHook("GetSettings") ---@type Hook<{Settings:SettingsLib_Setting[]}> Fired only once when the UI is first opened.
 
-QuickLoot:RegisterInputAction("Search", {
-    Name = TSK.InputAction_Search_Name,
-    Description = TSK.InputAction_Search_Description,
-})
 UILayout.RegisterTrackedUI(UI) -- Persist UI position.
 
 ---@class Features.QuickLoot.UI.State

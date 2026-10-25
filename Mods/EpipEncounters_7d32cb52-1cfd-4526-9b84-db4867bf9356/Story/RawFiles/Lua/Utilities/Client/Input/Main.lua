@@ -535,15 +535,15 @@ local Input = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        MouseMoved = {}, ---@type Event<InputLib_Event_MouseMoved>
-        KeyStateChanged = {Preventable = true}, ---@type PreventableEvent<InputLib_Event_KeyStateChanged>
-        KeyPressed = {}, ---@type Event<InputLib_Event_KeyPressed>
-        KeyReleased = {}, ---@type Event<InputLib_Event_KeyReleased>
+        MouseMoved = {}, ---@type Event<InputLib.Events.MouseMoved>
+        KeyStateChanged = {Preventable = true}, ---@type PreventableEvent<InputLib.Events.KeyStateChanged>
+        KeyPressed = {}, ---@type Event<InputLib.Events.KeyPressed>
+        KeyReleased = {}, ---@type Event<InputLib.Events.KeyReleased>
         MouseButtonPressed = {}, ---@type Event<InputLib_Event_MouseButtonPressed>
         StickMoved = {}, ---@type Event<InputLib.Events.StickMoved>
 
-        ActionExecuted = {}, ---@type Event<InputLib_Event_ActionExecuted>
-        ActionReleased = {}, ---@type Event<InputLib_Event_ActionExecuted>
+        ActionExecuted = {}, ---@type Event<InputLib.Events.ActionEvent>
+        ActionReleased = {}, ---@type Event<InputLib.Events.ActionEvent>
     },
     Hooks = {
         CanExecuteAction = {}, ---@type Event<InputLib_Hook_CanExecuteAction>  
@@ -665,17 +665,17 @@ end
 ---------------------------------------------
 
 ---Fired once per tick, since it relies on multiple raw input events firing.
----@class InputLib_Event_MouseMoved
+---@class InputLib.Events.MouseMoved
 ---@field Vector Vector2D Pixels moved.
 
----@class InputLib_Event_KeyStateChanged : PreventableEventParams
+---@class InputLib.Events.KeyStateChanged : PreventableEventParams
 ---@field InputID InputRawType
 ---@field State InputState
 
----@class InputLib_Event_KeyPressed
+---@class InputLib.Events.KeyPressed
 ---@field InputID InputRawType
 
----@class InputLib_Event_KeyReleased
+---@class InputLib.Events.KeyReleased
 ---@field InputID InputRawType
 
 ---@class InputLib_Event_MouseButtonPressed
@@ -991,7 +991,7 @@ Ext.Events.RawInput:Subscribe(function(e)
         end
     end
 
-    local event = {InputID = id, State = state,} ---@type InputLib_Event_KeyStateChanged
+    local event = {InputID = id, State = state,} ---@type InputLib.Events.KeyStateChanged
 
     Input.Events.KeyStateChanged:Throw(event)
 
