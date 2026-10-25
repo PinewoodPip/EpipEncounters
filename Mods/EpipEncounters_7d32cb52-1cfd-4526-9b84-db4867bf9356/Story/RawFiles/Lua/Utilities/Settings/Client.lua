@@ -23,7 +23,6 @@ function Settings.Save(moduleName, fileName)
         -- Don't save server settings.
         for id,_ in pairs(settingValues) do
             local setting = Settings.GetSetting(moduleName, id)
-
             if setting and setting.Context == "Server" then
                 settingValues[id] = nil
             end
@@ -33,10 +32,6 @@ function Settings.Save(moduleName, fileName)
             SaveVersion = Settings.SAVE_VERSION,
             Settings = settingValues,
         }
-
-        -- Temporary workaround for not being able to created nested directories in one go. TODO remove once/if Norbyte fixes this.
-        IO.SaveFile("Epip/ignore.txt", "")
-        IO.SaveFile("Epip/Settings/ignore.txt", "")
 
         IO.SaveFile(fileName, save)
     else
