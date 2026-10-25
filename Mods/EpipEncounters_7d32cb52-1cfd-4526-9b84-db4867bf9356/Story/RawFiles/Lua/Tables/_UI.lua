@@ -45,9 +45,15 @@ local BaseUI = {
         PRECACHE_UI_DATA = "OF_PrecacheUIData",
         PREVENT_CAMERA_MOVE = "OF_PreventCameraMove",
     },
-} 
+}
 Client.UI._BaseUITable = BaseUI
 OOP.RegisterClass("UI", BaseUI, {"Library"})
+
+---@type table<integer|string, table<UI.UICall, table<"Before"|"After", fun(ev:EclLuaUICallEvent, ...:any)[]>>>
+local _UICallListeners = {}
+
+---@type table<integer|string, table<UI.UIInvoke, table<"Before"|"After", fun(ev:EclLuaUICallEvent, ...:any)[]>>>
+local _UIInvokeListeners = {}
 
 ---------------------------------------------
 -- METHODS
@@ -84,25 +90,57 @@ end
 ---Register a listener for a UI Invoke raw event.
 ---@param method string Method name.
 ---@param handler fun(ev:EclLuaUICallEvent, ...)
----@param when? "Before"|"After"
+---@param when ("Before"|"After")? Defaults to "Before".
 ---@param typeID integer? Defaults to the UI's type ID. Used for UIs that are reused with different type IDs (ex. OptionsSettings)
 function BaseUI:RegisterInvokeListener(method, handler, when, typeID)
-    local path = typeID or self.PATH or self.UITypeID
+    typeID = typeID or self.PATH or self.UITypeID
     when = when or "Before"
 
-    Utilities.Hooks.RegisterListener("GenericUIEventManager", "UI_" .. path .. "_UIInvoke_" .. method .. "_" .. when, handler)
+    local uiListeners = _UIInvokeListeners[typeID]
+    if not uiListeners then
+        uiListeners = {}
+        _UIInvokeListeners[typeID] = uiListeners
+    end
+    local invokeListeners = uiListeners[method]
+    if not invokeListeners then
+        invokeListeners = {}
+        uiListeners[method] = invokeListeners
+    end
+    local timingListeners = invokeListeners[when]
+    if not timingListeners then
+        timingListeners = {}
+        invokeListeners[when] = timingListeners
+    end
+
+    table.insert(timingListeners, handler)
 end
 
 ---Register a listener for a UI Call raw event.
 ---@param method string ExternalInterface call name.
 ---@param handler fun(ev:EclLuaUICallEvent, ...)
----@param when ("Before"|"After")?
+---@param when ("Before"|"After")? Defaults to "Before".
 ---@param typeID integer? Defaults to the UI's type ID. Used for UIs that are reused with different type IDs (ex. OptionsSettings)
 function BaseUI:RegisterCallListener(method, handler, when, typeID)
-    local path = typeID or self.PATH or self.UITypeID
+    typeID = typeID or self.PATH or self.UITypeID
     when = when or "Before"
 
-    Utilities.Hooks.RegisterListener("GenericUIEventManager", "UI_" .. path .. "_UICall_" .. method .. "_" .. when, handler)
+    local uiListeners = _UICallListeners[typeID]
+    if not uiListeners then
+        uiListeners = {}
+        _UICallListeners[typeID] = uiListeners
+    end
+    local callListeners = uiListeners[method]
+    if not callListeners then
+        callListeners = {}
+        uiListeners[method] = callListeners
+    end
+    local timingListeners = callListeners[when]
+    if not timingListeners then
+        timingListeners = {}
+        callListeners[when] = timingListeners
+    end
+
+    table.insert(timingListeners, handler)
 end
 
 ---Get the MainTimeline of a UI, if it currently exists.
@@ -163,7 +201,6 @@ end
 ---@param delay number? Defaults to 0 seconds. Useful while initializing the UI, as the call does not work during the first few ticks of its existence.
 function BaseUI:SetPositionRelativeToViewport(anchor, position, target, delay)
     target = target or "screen"
-    
     if delay then
         Timer.Start(delay, function (_)
             self:ExternalInterfaceCall("setPosition", anchor, target, position)
@@ -365,29 +402,54 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Forward events
+local _PathIdentifierCache = {} ---@type table<string, string|false>
+local _EPIP_UI_PATTERN = "Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/(.*)%.swf$"
+---Returns the ID used to key UI Invoke/Call listeners.
+---@param ui UIObject
+---@return string|integer
+local function _GetListenerUIIdentifier(ui)
+    local path = ui.Path
+    local cached = _PathIdentifierCache[path]
+    if cached == nil then
+        local relativePath = path:match(_EPIP_UI_PATTERN)
+        cached = (relativePath and relativePath ~= "generic") and relativePath or false -- False indicates this UI is a Generic one and should use TypeID always.
+        _PathIdentifierCache[path] = cached
+    end
+    return cached or ui:GetTypeId()
+end
+
+-- Forward UI calls.
 Ext.Events.UICall:Subscribe(function(ev)
     local ui = ev.UI
-    local identifier = ui:GetTypeId()
-
-    -- TODO improve
-    local relativePath = string.match(ev.UI.Path, "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/.*%.swf)$")
-    if relativePath and not string.match(ev.UI.Path, "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/generic%.swf)$") then
-        identifier = relativePath
+    local identifier = _GetListenerUIIdentifier(ui)
+    local uiListeners = _UICallListeners[identifier]
+    if uiListeners then
+        local callListeners = uiListeners[ev.Function]
+        if callListeners then
+            local timingListeners = callListeners[ev.When]
+            if timingListeners then
+                for _,handler in ipairs(timingListeners) do
+                    handler(ev, table.unpack(ev.Args))
+                end
+            end
+        end
     end
-
-    Utilities.Hooks.FireEvent("GenericUIEventManager", "UI_" .. identifier .. "_UICall_" .. ev.Function .. "_" .. ev.When, ev, table.unpack(ev.Args))
 end)
 
+-- Forward UI invokes.
 Ext.Events.UIInvoke:Subscribe(function(ev)
     local ui = ev.UI
-    local identifier = ui:GetTypeId()
-
-    -- TODO improve
-    local relativePath = string.match(ev.UI.Path, "Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/(.*)%.swf$")
-    if relativePath and not string.match(ev.UI.Path, "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/generic%.swf)$") then
-        identifier = relativePath
+    local identifier = _GetListenerUIIdentifier(ui)
+    local uiListeners = _UIInvokeListeners[identifier]
+    if uiListeners then
+        local invokeListeners = uiListeners[ev.Function]
+        if invokeListeners then
+            local timingListeners = invokeListeners[ev.When]
+            if timingListeners then
+                for _,handler in ipairs(timingListeners) do
+                    handler(ev, table.unpack(ev.Args))
+                end
+            end
+        end
     end
-
-    Utilities.Hooks.FireEvent("GenericUIEventManager", "UI_" .. identifier .. "_UIInvoke_" .. ev.Function .. "_" .. ev.When, ev, table.unpack(ev.Args))
 end)
