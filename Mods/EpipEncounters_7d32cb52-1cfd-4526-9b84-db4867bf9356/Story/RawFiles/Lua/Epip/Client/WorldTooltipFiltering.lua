@@ -80,13 +80,19 @@ end
 ---Returns whether a tooltip entry should be filtered. Checks the registered settings.
 ---@param entry WorldTooltipUI_Entry
 ---@param enabledFilters table<Feature_WorldTooltipFiltering_Setting, boolean>? If unset or has missing keys, the setting values will be checked from SettingsLib.
+---@param entity (EclItem|EclCharacter)? If unset, will be fetched from the entry.
 ---@return boolean
-function Filtering.ShouldFilter(entry, enabledFilters)
-    local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
+function Filtering.ShouldFilter(entry, enabledFilters, entity)
+    entity = entity or Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
     local shouldFilter = false
 
     for _,setting in ipairs(Filtering.SETTINGS) do
-        local isFilterEnabled = enabledFilters ~= nil and Filtering._GetCachedFilterSettingValue(enabledFilters, setting) or Filtering._IsSettingEnabled(setting)
+        local isFilterEnabled
+        if enabledFilters then
+            isFilterEnabled = Filtering._GetCachedFilterSettingValue(enabledFilters, setting)
+        else
+            isFilterEnabled = Filtering._IsSettingEnabled(setting)
+        end
         if not isFilterEnabled and setting.FilterPredicate then
             shouldFilter = setting.FilterPredicate(entry, entity)
 
@@ -105,7 +111,7 @@ end
 ---@param setting Feature_WorldTooltipFiltering_Setting
 ---@return boolean
 function Filtering._GetCachedFilterSettingValue(cache, setting)
-    if not cache[setting] then
+    if cache[setting] == nil then
         cache[setting] = Filtering._IsSettingEnabled(setting)
     end
     return cache[setting]
@@ -120,13 +126,13 @@ WorldTooltip.Hooks.UpdateContent:Subscribe(function (ev)
     local filterSettingStates = {} ---@type table<Feature_WorldTooltipFiltering_Setting, boolean>
     while i <= #ev.Entries do
         local entry = ev.Entries[i]
+        local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
 
         -- Filter out entries
-        if Filtering.ShouldFilter(entry, filterSettingStates) then
+        if Filtering.ShouldFilter(entry, filterSettingStates, entity) then
             table.remove(ev.Entries, i)
         else
             -- Apply label edits
-            local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
             for _,setting in ipairs(Filtering.SETTINGS) do
                 local isFilterEnabled = Filtering._GetCachedFilterSettingValue(filterSettingStates, setting)
                 if isFilterEnabled and setting.GetLabel then
