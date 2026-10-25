@@ -40,7 +40,7 @@ Epip.InitializeLibrary("Timer", Timer)
 ---@field InitialDuration number
 ---@field RepeatCount integer How many times the timer has repeated.
 ---@field _MaxRepeatCount integer The maximum amount of times the timer can fire. Values below 0 indicate no limit.
----@field ___Handlers fun(self)[]
+---@field ___Handlers fun(ev:TimerLib_Event_TimerCompleted)[]
 ---@field Paused boolean
 local _TimerEntry = {
     _MaxRepeatCount = 1,
@@ -221,8 +221,9 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+local _TimerEventTable = {Timer = nil, Stopped = false} ---@type TimerLib_Event_TimerCompleted|Event_Params
 local _PreviousTime = nil
-
+local _DebugTraceback = debug.traceback
 -- Decrement timer durations.
 Ext.Events.Tick:Subscribe(function()
     local time = MonotonicTime()
@@ -233,17 +234,21 @@ Ext.Events.Tick:Subscribe(function()
         for _,timer in ipairs(Timer._ActiveTimers) do
             if not timer.Paused then
                 if timer:TickDown(deltaTime) then
+                    _TimerEventTable.Timer = timer
+                    _TimerEventTable.Stopped = false -- Note: StopPropagation() is not supported for directly-registered handlers
+
                     -- Dispatch handlers
                     local handlers = timer.___Handlers
                     for _,handler in ipairs(handlers) do
-                        handler(timer)
+                        local success, msg = xpcall(handler, _DebugTraceback, _TimerEventTable)
+                        if not success then
+                            Timer:__LogError("Error during timer handler " .. (timer.ID or "") .. ":", msg)
+                        end
                     end
 
                     -- Only throw global event if anything is listening to it.
                     if Timer.Events.TimerCompleted.First then
-                        Timer.Events.TimerCompleted:Throw({
-                            Timer = timer,
-                        })
+                        Timer.Events.TimerCompleted:Throw(_TimerEventTable)
                     end
                 end
             end
