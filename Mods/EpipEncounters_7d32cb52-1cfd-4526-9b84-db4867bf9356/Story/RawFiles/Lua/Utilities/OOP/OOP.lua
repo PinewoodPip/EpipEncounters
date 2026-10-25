@@ -14,6 +14,10 @@ OOP = {
     _Classes = {}, ---@type table<string, table>
 }
 
+---@type table<Class, metatable>
+local _ClassMetatables = {}
+setmetatable(_ClassMetatables, {__mode = 'k'}) -- Just in case someone creates classes dynamically
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
@@ -34,7 +38,7 @@ local Class = {}
 ---@field Value fun(self:Class):any Will be invoked to get the return value for indexing with the key.
 
 ---Returns the cached parent class tables of Class.
----@param class Class
+---@param class Class Should be the class definition table for best performance (as it will write a cached field).
 ---@return Class[]
 local function GetParentClassTables(class)
     local parents = rawget(class, "___ParentClassTables")
@@ -59,58 +63,63 @@ function Class:__Create(data)
     data = data or {}
     ---@cast data Class
 
-    setmetatable(data, {
-        __index = function (instance, key)
-            -- Check field presence in class definition
-            local classDefinitionValue = classTable[key] -- Uses a local to avoid indexing it twice.
-            if classDefinitionValue ~= nil then
-                return classDefinitionValue
-            end
-
-            -- Check presence in parent classes
-            for _,tbl in ipairs(GetParentClassTables(instance)) do
-                if tbl[key] ~= nil then
-                    return tbl[key]
+    local className = self.__name
+    local classMetatable = _ClassMetatables[classTable]
+    if classMetatable == nil then
+        local classDefinitionIndex = classTable.__index
+        classMetatable = {
+            __index = function (instance, key)
+                -- Check field presence in class definition
+                -- Since class definition table also has its own __index
+                -- for looking up fields inherited from parent class definitions,
+                -- this handles the whole inheritance chain (vertical & horizontal)
+                -- even for a class instance
+                local classDefinitionValue = classTable[key] -- Uses a local to avoid indexing it twice.
+                if classDefinitionValue ~= nil then
+                    return classDefinitionValue
                 end
-            end
 
-            -- Check dedicated __index method in class definition
-            if classTable.__index ~= nil then
-                return classTable.__index(instance, key)
-            end
-        end,
-        -- TODO support multiple inheritance for these
-        __newindex = classTable.__newindex,
-        __mode = classTable.__mode,
-        __call = classTable.__call,
-        __metatable = classTable.__metatable,
-        __tostring = classTable.__tostring,
-        __len = classTable.__len,
-        __pairs = classTable.__pairs,
-        __ipairs = classTable.__ipairs,
-        __name = classTable.__name,
+                -- Check dedicated __index method in class definition
+                if classDefinitionIndex ~= nil then
+                    return classDefinitionIndex(instance, key)
+                end
+            end,
+            -- TODO support multiple inheritance for these
+            __newindex = classTable.__newindex,
+            __mode = classTable.__mode,
+            __call = classTable.__call,
+            __metatable = classTable.__metatable,
+            __tostring = classTable.__tostring,
+            __len = classTable.__len,
+            __pairs = classTable.__pairs,
+            __ipairs = classTable.__ipairs,
+            __name = classTable.__name,
 
-        __unm = classTable.__unm,
-        __add = classTable.__add,
-        __sub = classTable.__sub,
-        __mul = classTable.__mul,
-        __div = classTable.__div,
-        __idiv = classTable.__idiv,
-        __mod = classTable.__mod,
-        __pow = classTable.__pow,
-        __concat = classTable.__concat,
+            __unm = classTable.__unm,
+            __add = classTable.__add,
+            __sub = classTable.__sub,
+            __mul = classTable.__mul,
+            __div = classTable.__div,
+            __idiv = classTable.__idiv,
+            __mod = classTable.__mod,
+            __pow = classTable.__pow,
+            __concat = classTable.__concat,
 
-        __band = classTable.__band,
-        __bor = classTable.__bor,
-        __bxor = classTable.__bxor,
-        __bnot = classTable.__bnot,
-        __shl = classTable.__shl,
-        __shr = classTable.__shr,
+            __band = classTable.__band,
+            __bor = classTable.__bor,
+            __bxor = classTable.__bxor,
+            __bnot = classTable.__bnot,
+            __shl = classTable.__shl,
+            __shr = classTable.__shr,
 
-        __eq = classTable.__eq,
-        __lt = classTable.__lt,
-        __le = classTable.__le,
-    })
+            __eq = classTable.__eq,
+            __lt = classTable.__lt,
+            __le = classTable.__le,
+        }
+        _ClassMetatables[className] = classTable
+    end
+
+    setmetatable(data, classMetatable)
 
     return data
 end
@@ -131,7 +140,7 @@ function Class:ImplementsClass(class)
     local implements = self:GetClassName() == className
 
     if not implements then
-        for _,parentClass in ipairs(self:GetParentClasses()) do
+        for _,parentClass in ipairs(GetParentClassTables(self:GetClassDefinition())) do
             if parentClass:GetClassName() == className or parentClass:ImplementsClass(className) then
                 implements = true
                 break
@@ -291,7 +300,7 @@ function OOP.RegisterClass(className, class, parentClasses)
             end
 
             -- Check presence in parent classes
-            for _,tbl in ipairs(Class.GetParentClasses(class)) do
+            for _,tbl in ipairs(GetParentClassTables(class)) do
                 if tbl[key] ~= nil then
                     return tbl[key]
                 end
