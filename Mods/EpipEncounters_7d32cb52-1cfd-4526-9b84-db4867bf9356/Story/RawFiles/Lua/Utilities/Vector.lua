@@ -55,14 +55,17 @@ local _Vector = {
 ---------------------------------------------
 
 ---Creates a vector of variable length.
----@vararg number|table If using tables, provide one parameter only.
+---@overload fun(tbl:number[]):Vector
+---@vararg number
 ---@return Vector
 function Vector.Create(...)
-    local vector = {...} ---@type Vector
+    local firstParam, secondParam = ...
+    local vector
 
-    -- Unpack table. Only first param is considered in this case.
-    if #vector == 1 and type(vector[1]) == "table" then
-        vector = {table.unpack(vector[1])}
+    if secondParam or type(firstParam) ~= "table" then
+        vector = {...} ---@type Vector
+    else
+        vector = firstParam
     end
 
     setmetatable(vector, _Vector)
