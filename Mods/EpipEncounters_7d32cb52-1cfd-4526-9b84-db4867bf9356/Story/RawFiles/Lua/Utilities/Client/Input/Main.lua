@@ -936,6 +936,8 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Forward input events.
+local MOTION_EVENTS = Input.MOTION_EVENTS
 Ext.Events.RawInput:Subscribe(function(e)
     local inputEventData = e.Input
     local id = tostring(inputEventData.Input.InputId)
@@ -993,14 +995,18 @@ Ext.Events.RawInput:Subscribe(function(e)
 
     Input.Events.KeyStateChanged:Throw(event)
 
-    if state == "Released" then
-        Input.Events.KeyReleased:Throw({
-            InputID = id,
-        })
-    else
-        Input.Events.KeyPressed:Throw({
-            InputID = id,
-        })
+    -- Mouse movement does not trigger Key Pressed/Released
+    -- This also prevents them from needlessly triggering InputActions
+    if not MOTION_EVENTS[id] then
+        if state == "Released" then
+            Input.Events.KeyReleased:Throw({
+                InputID = id,
+            })
+        else
+            Input.Events.KeyPressed:Throw({
+                InputID = id,
+            })
+        end
     end
 
     if event.Prevented then
