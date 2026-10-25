@@ -301,7 +301,7 @@ end
 ---@param flag UIObjectFlags
 ---@return boolean
 function BaseUI:IsFlagged(flag)
-    return self:GetUI().Flags[flag]
+    return self:GetUI().Flags[flag] == true
 end
 
 ---Returns whether the UI has any of the TextInput flags set.
@@ -403,7 +403,8 @@ end
 ---------------------------------------------
 
 local _PathIdentifierCache = {} ---@type table<string, string|false>
-local _EPIP_UI_PATTERN = "Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/(.*)%.swf$"
+local _EPIP_UI_PATTERN = "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/.*%.swf)$"
+local _GENERIC_SWF_PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/generic.swf"
 ---Returns the ID used to key UI Invoke/Call listeners.
 ---@param ui UIObject
 ---@return string|integer
@@ -412,7 +413,7 @@ local function _GetListenerUIIdentifier(ui)
     local cached = _PathIdentifierCache[path]
     if cached == nil then
         local relativePath = path:match(_EPIP_UI_PATTERN)
-        cached = (relativePath and relativePath ~= "generic") and relativePath or false -- False indicates this UI is a Generic one and should use TypeID always.
+        cached = (relativePath and relativePath ~= _GENERIC_SWF_PATH) and relativePath or false -- False indicates this UI is a Generic one and should use TypeID always.
         _PathIdentifierCache[path] = cached
     end
     return cached or ui:GetTypeId()
