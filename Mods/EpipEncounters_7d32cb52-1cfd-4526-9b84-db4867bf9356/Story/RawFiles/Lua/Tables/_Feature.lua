@@ -34,7 +34,7 @@ local Feature = {
 _Feature = Feature
 OOP.RegisterClass("Feature", Feature, {"Library"})
 
-Feature._AllGameStatesBitfield = Feature.GAME_STATES.RUNNING_SESSION - 1
+Feature._AllGameStatesBitfield = Feature.GAME_STATES.RUNNING_SESSION * 2 - 1
 
 ---------------------------------------------
 -- METHODS
