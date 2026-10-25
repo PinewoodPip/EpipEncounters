@@ -122,16 +122,17 @@ end
 ---------------------------------------------
 
 WorldTooltip.Hooks.UpdateContent:Subscribe(function (ev)
-    local i = 1
     local filterSettingStates = {} ---@type table<Feature_WorldTooltipFiltering_Setting, boolean>
-    while i <= #ev.Entries do
-        local entry = ev.Entries[i]
+    local filteredEntries = {} ---@type WorldTooltipUI_Entry[]
+    local filteredEntriesCount = 0
+    for _,entry in ipairs(ev.Entries) do
         local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
 
-        -- Filter out entries
-        if Filtering.ShouldFilter(entry, filterSettingStates, entity) then
-            table.remove(ev.Entries, i)
-        else
+        -- Only keep entries that were not filtered out
+        if not Filtering.ShouldFilter(entry, filterSettingStates, entity) then
+            filteredEntriesCount = filteredEntriesCount + 1
+            filteredEntries[filteredEntriesCount] = entry
+
             -- Apply label edits
             for _,setting in ipairs(Filtering.SETTINGS) do
                 local isFilterEnabled = Filtering._GetCachedFilterSettingValue(filterSettingStates, setting)
@@ -139,9 +140,9 @@ WorldTooltip.Hooks.UpdateContent:Subscribe(function (ev)
                     entry.Label = setting.GetLabel(entry, entity)
                 end
             end
-            i = i + 1
         end
     end
+    ev.Entries = filteredEntries
 end)
 
 ---------------------------------------------

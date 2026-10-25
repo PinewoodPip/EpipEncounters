@@ -11,6 +11,15 @@ local WorldTooltip = {
     _IgnoreNextClick = false,
     _LastTooltipClickWasPrevented = false,
 
+    FLASH_ENTRY_TEMPLATE = {
+        "ID",
+        "X",
+        "Y",
+        "Label",
+        "SortHelper",
+        "IsItem",
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -52,26 +61,19 @@ Epip.InitializeUI(Ext.UI.TypeID.worldTooltip, "WorldTooltip", WorldTooltip)
 ---------------------------------------------
 
 -- Listen for updates.
+local _FlashEntryTemplate = WorldTooltip.FLASH_ENTRY_TEMPLATE
 WorldTooltip:RegisterInvokeListener("updateTooltips", function (ev)
     local arr = ev.UI:GetRoot().worldTooltip_array
 
     ---@type WorldTooltipUI_Entry[]
-    local arrayEntryTemplate = {
-        "ID",
-        "X",
-        "Y",
-        "Label",
-        "SortHelper",
-        "IsItem",
-    }
-    local parsed = ParseFlashArray(arr, arrayEntryTemplate)
+    local parsed = ParseFlashArray(arr, _FlashEntryTemplate)
 
     ---@type WorldTooltipUI_Hook_UpdateContent
     local update = WorldTooltip.Hooks.UpdateContent:Throw({
         Entries = parsed,
     })
 
-    EncodeFlashArray(arr, arrayEntryTemplate, update.Entries)
+    EncodeFlashArray(arr, _FlashEntryTemplate, update.Entries)
 end)
 
 -- Listen for entries being clicked.
