@@ -67,6 +67,7 @@ function Library.Create(modTable, id, data)
     data.__ID = id
     data.__ModTable = modTable
     data.__name = id -- DEPRECATED! TODO
+    data.__IsDebug = false
 
     local lib = OOP.GetClass("Library"):__Create(data) ---@cast lib Library
 
