@@ -14,8 +14,13 @@ local V = Vector.Create
 ---@field _ClearAfterDrag boolean
 ---@field _AutoUpdateDelay number In seconds.
 ---@field _AutoUpdateRemainingDelay number In seconds.
+---@field _AutoUpdateTickListenerID GUID?
 ---@field _RequiredFeatures GenericUI.Prefabs.HotbarSlot.RequiredFeatures
 ---@field _ValidObjectTypes set<GenericUI_Prefab_HotbarSlot_Object_Type>
+---@field _LastLabel string?
+---@field _LastCooldown number?
+---@field _LastEnabledState boolean?
+---@field _LastActiveState boolean?
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
@@ -126,7 +131,6 @@ function Slot.Create(ui, id, parent, requiredFeatures)
     obj._CanDrag = false
     obj._CanDrop = false
     obj._ClearAfterDrag = false
-    obj._AutoUpdateDelay = Slot.UPDATE_INTERVAL
     obj._AutoUpdateRemainingDelay = Slot.UPDATE_INTERVAL
     obj._Usable = true
     obj._RequiredFeatures = requiredFeatures
@@ -161,16 +165,9 @@ function Slot.Create(ui, id, parent, requiredFeatures)
         Tooltip.HideTooltip()
         slot:SetHighlighted(false)
     end)
-    local subscriberID = Text.GenerateGUID()
-    GameState.Events.RunningTick:Subscribe(function (ev)
-        if not obj:IsDestroyed() then
-            obj:_OnTick(ev)
-        else
-            -- Remove listener when the prefab is destroyed.
-            GameState.Events.RunningTick:Unsubscribe(subscriberID)
-        end
-    end, {StringID = subscriberID})
     ---@diagnostic enable invisible
+
+    obj:SetUpdateDelay(Slot.UPDATE_INTERVAL)
 
     obj:Clear()
 
@@ -241,6 +238,7 @@ end
 ---Sets the label of the slot, displayed in the bottom right corner.
 ---@param label string
 function Slot:SetLabel(label)
+    if self._LastLabel == label then return end
     if self._RequiredFeatures.TextLabel then
         local text = self.Label
         text:SetText(label)
@@ -250,6 +248,7 @@ function Slot:SetLabel(label)
         local slot = self.SlotElement
         slot:SetLabel(label)
     end
+    self._LastLabel = label
 end
 
 ---Sets the object types that can be dragged *into* the slot.
@@ -310,8 +309,10 @@ end
 ---Sets the enabled state of the slot.
 ---@param enabled boolean
 function Slot:SetEnabled(enabled)
+    if self._LastEnabledState == enabled then return end
     local slot = self.SlotElement
     slot:SetEnabled(enabled)
+    self._LastEnabledState = enabled
 end
 
 ---Returns whether the slot is enabled.
@@ -325,8 +326,9 @@ end
 ---@param cooldown number In turns.
 ---@param playRefreshAnimation boolean? Defaults to `false`.
 function Slot:SetCooldown(cooldown, playRefreshAnimation)
-    if self._RequiredFeatures.CooldownAnimations then
+    if self._RequiredFeatures.CooldownAnimations and self._LastCooldown ~= cooldown then
         self.SlotElement:SetCooldown(cooldown, playRefreshAnimation)
+        self._LastCooldown = cooldown
     end
 end
 
@@ -334,8 +336,9 @@ end
 ---Requires `ActiveAnimation` to be enabled.
 ---@param active boolean
 function Slot:SetActive(active)
-    if self._RequiredFeatures.ActiveAnimation then
+    if self._RequiredFeatures.ActiveAnimation and self._LastActiveState ~= active then
         self.SlotElement:SetActive(active)
+        self._LastActiveState = active
     end
 end
 
@@ -347,10 +350,9 @@ function Slot:SetUsable(usable)
 end
 
 function Slot:Clear()
-    local slot = self.SlotElement
     self:SetIcon("", V(1, 1))
     self:SetCooldown(-1, false)
-    slot:SetEnabled(false)
+    self:SetEnabled(false)
     self:SetLabel("")
 
     self.Object = _SlotObject.Create("None")
@@ -383,6 +385,26 @@ end
 ---@param delay number In seconds. Set to negative to disable.
 function Slot:SetUpdateDelay(delay)
     self._AutoUpdateDelay = delay
+
+    -- Unsubscribe previous listener if the auto-update is being disabled
+    if self._AutoUpdateTickListenerID and delay < 0 then
+        GameState.Events.RunningTick:Unsubscribe(self._AutoUpdateTickListenerID)
+        self._AutoUpdateTickListenerID = nil
+    end
+
+    -- Subscribe tick listener
+    if delay >= 0 and not self._AutoUpdateTickListenerID then -- 0 means update per tick (highly not recommended)
+        local subscriberID = Text.GenerateGUID()
+        GameState.Events.RunningTick:Subscribe(function (ev)
+            if not self:IsDestroyed() then
+                self:_OnTick(ev)
+            else
+                -- Remove listener when the prefab is destroyed.
+                GameState.Events.RunningTick:Unsubscribe(subscriberID)
+            end
+        end, {StringID = subscriberID})
+        self._AutoUpdateTickListenerID = subscriberID
+    end
 end
 
 ---Attempts to use the slot's contents, as if it were clicked.
@@ -466,7 +488,6 @@ end
 ---Updates the element based on the held entity and resets the update timer.
 function Slot:_Update()
     local char = Client.GetCharacter()
-    local slot = self.SlotElement
     local obj = self.Object
     local isPreparingSkill = false
 
@@ -520,7 +541,7 @@ function Slot:_Update()
             -- Can't use slots outside of your turn.
             isEnabled = isEnabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
 
-            slot:SetEnabled(isEnabled)
+            self:SetEnabled(isEnabled)
         else -- Clear the slot once we consume all stacks of this item.
             self:Clear()
         end
@@ -533,7 +554,7 @@ end
 ---@param ev GameStateLib_Event_RunningTick
 function Slot:_OnTick(ev)
     local canUpdate = false
-    if self._AutoUpdateDelay > 0 then
+    if self._AutoUpdateDelay >= 0 then
         -- Decrement timer
         local remainingTime = self._AutoUpdateRemainingDelay
         remainingTime = remainingTime - ev.DeltaTime / 1000
