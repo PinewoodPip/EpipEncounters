@@ -63,7 +63,6 @@ function Class:__Create(data)
     data = data or {}
     ---@cast data Class
 
-    local className = self.__name
     local classMetatable = _ClassMetatables[classTable]
     if classMetatable == nil then
         local classDefinitionIndex = classTable.__index
@@ -116,7 +115,7 @@ function Class:__Create(data)
             __lt = classTable.__lt,
             __le = classTable.__le,
         }
-        _ClassMetatables[className] = classTable
+        _ClassMetatables[classTable] = classMetatable
     end
 
     setmetatable(data, classMetatable)
