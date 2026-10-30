@@ -55,6 +55,10 @@ _Element.Events = {
 ---@field Delay number? Defaults to 0 seconds.
 ---@field OnComplete fun(ev:GenericUI_Element_Event_TweenCompleted)? Shorthand for registering a TweenCompleted listener. Will run only once, then be unsubscribed.
 
+-- Maps event table templates to a metatable that lazily creates their SubscribableEvents on __index.
+---@type table<table, metatable>
+local _EventMetatables = {}
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -121,14 +125,39 @@ function _Element:RemoveChild(element)
     self.UI:DestroyElement(element)
 end
 
-function _Element:_RegisterEvents()
-    local _Templates = self.Events
-
-    self.Events = {}
-
-    for id,tbl in pairs(_Templates) do
-        self.Events[id] = SubscribableEvent:New(id, tbl.Preventable)
+---Returns the metatable for an Events table that creates SubscribableEvents from a template when indexed.
+---@param template table<string, Event>
+---@return metatable
+local function _GetLazyEventsMetatable(template)
+    local metatable = _EventMetatables[template]
+    if not metatable then
+        metatable = {
+            __index = function (events, id)
+                local eventTemplate = template[id]
+                if eventTemplate then
+                    local event = SubscribableEvent:New(id, eventTemplate.Preventable)
+                    rawset(events, id, event)
+                    return event
+                end
+                return nil
+            end,
+            -- Ensure pairs() still lists every event
+            __pairs = function (events)
+                for id in pairs(template) do
+                    local _ = events[id]
+                end
+                return next, events, nil
+            end,
+        }
+        _EventMetatables[template] = metatable
     end
+    return metatable
+end
+
+---Initializes the Events table.
+function _Element:_RegisterEvents()
+    -- Events are created lazily to avoid creating event tables for unused events.
+    self.Events = setmetatable({}, _GetLazyEventsMetatable(self.Events))
 end
 
 ---Called after the element is created in flash. Override to run initialization routines.
@@ -139,9 +168,12 @@ function _Element:_OnCreation() end
 ---@param child GenericUI_Element
 function _Element:_RegisterChild(child)
     table.insert(self._Children, child)
-    self.Events.ChildAdded:Throw({
-        Child = child,
-    })
+    local childAddedEvent = rawget(self.Events, "ChildAdded") -- Avoid creating the event if nothing has accessed it.
+    if childAddedEvent then
+        childAddedEvent:Throw({
+            Child = child,
+        })
+    end
 end
 
 ---Removes a child element to track.
