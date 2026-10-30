@@ -638,78 +638,99 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Listen for global tooltip request calls.
-Ext.Events.UICall:Subscribe(function(ev)
-    local param1, param2 = table.unpack(ev.Args)
-
-    if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip then
+-- Handle global tooltip request calls.
+-- Note: FlashParams must copy from Args since it has restricted lifetime
+---@type table<string, fun(ev:EclLuaUICallEvent)>
+local _TooltipUICallHandlers = {
+    ["showSkillTooltip"] = function (ev)
+        if Tooltip._nextCustomTooltip then return end
+        local args = ev.Args
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Skill",
-            FlashCharacterHandle = param1,
-            SkillID = param2,
+            FlashCharacterHandle = args[1],
+            SkillID = args[2],
             UICall = ev.Function,
-            FlashParams = {table.unpack(ev.Args)},
+            FlashParams = {table.unpack(args)},
             IsFromGame = Tooltip._nextSkillTooltip == nil,
         })
-    elseif ev.Function == "showItemTooltip" then
+    end,
+    ["showItemTooltip"] = function (ev)
+        local args = ev.Args
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Item",
-            FlashItemHandle = param1,
+            FlashItemHandle = args[1],
             UICall = ev.Function,
-            FlashParams = {table.unpack(ev.Args)},
+            FlashParams = {table.unpack(args)},
             IsFromGame = Tooltip._nextItemTooltip == nil,
         })
-    elseif ev.Function == "showStatusTooltip" then
+    end,
+    ["showStatusTooltip"] = function (ev)
+        local args = ev.Args
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Status",
             UICall = ev.Function,
-            FlashStatusHandle = param2,
-            FlashCharacterHandle = param1,
-            FlashParams = {table.unpack(ev.Args)},
+            FlashStatusHandle = args[2],
+            FlashCharacterHandle = args[1],
+            FlashParams = {table.unpack(args)},
             IsFromGame = true,
         })
-    elseif ev.Function == "showStatTooltip" then
+    end,
+    ["showStatTooltip"] = function (ev)
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Stat",
-            StatID = param1,
+            StatID = ev.Args[1],
             IsFromGame = true,
         })
-    elseif ev.Function == "showAbilityTooltip" then
-        local isCharacterCreation = ev.UI:GetTypeId() == Ext.UI.TypeID.characterCreation
-        local flashHandle = isCharacterCreation and param1 or Ext.UI.HandleToDouble(Client.GetCharacter().Handle)
-        local abilityID = isCharacterCreation and param2 or param1 -- In Character Creation, the first param is the character handle instead.
+    end,
+    ["showAbilityTooltip"] = function (ev)
+        local args = ev.Args
+        local uiType = ev.UI:GetTypeId()
+        local isCharacterCreation = uiType == Ext.UI.TypeID.characterCreation
+        local flashHandle = isCharacterCreation and args[1] or Ext.UI.HandleToDouble(Client.GetCharacter().Handle)
+        local abilityID = isCharacterCreation and args[2] or args[1] -- In Character Creation, the first param is the character handle instead.
         Tooltip._SetNextTooltipSource({
-            UIType = ev.UI:GetTypeId(),
+            UIType = uiType,
             Type = "Ability",
             AbilityID = abilityID,
             FlashCharacterHandle = flashHandle,
             IsFromGame = true,
         })
-    elseif ev.Function == "showClassEditTooltip" then -- From Character Creation.
+    end,
+    ["showClassEditTooltip"] = function (ev) -- From Character Creation.
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Ability",
-            AbilityID = param2,
+            AbilityID = ev.Args[2],
             FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle),
             IsFromGame = true,
         })
-    elseif ev.Function == "showTooltip" and ev.UI:GetTypeId() == Ext.UI.TypeID.examine then -- Examine UI.
-        local tooltipType = param1
-        local statIDOrComponentHandle = param2
+    end,
+    ["showTooltip"] = function (ev) -- Examine UI.
+        local uiType = ev.UI:GetTypeId()
+        if uiType ~= Ext.UI.TypeID.examine then return end
+        local args = ev.Args
+        local tooltipType = args[1]
+        local statIDOrComponentHandle = args[2]
         Tooltip._SetNextTooltipSource({
-            UIType = ev.UI:GetTypeId(),
+            UIType = uiType,
             UICall = ev.Function,
             Type = Tooltip.EXAMINE_TOOLTIP_TYPE_MAP[tooltipType] or "Stat",
             AbilityID = statIDOrComponentHandle,
             IsFromGame = true,
             FlashStatusHandle = statIDOrComponentHandle,
             FlashCharacterHandle = Ext.UI.HandleToDouble(Examine.GetCharacter().Handle),
-            FlashParams = {table.unpack(ev.Args)},
+            FlashParams = {table.unpack(args)}, -- Must be copied; ev.Args is only valid during the event.
         })
+    end,
+}
+Ext.Events.UICall:Subscribe(function(ev)
+    local handler = _TooltipUICallHandlers[ev.Function]
+    if handler then
+        handler(ev)
     end
 end)
 
