@@ -50,6 +50,7 @@ Epip.InitializeLibrary("Settings", Settings)
 ---@field ModTable string
 ---@field Value any
 ---@field DefaultValue any
+---@field DeveloperOnly boolean? Defaults to false.
 local _Setting = {}
 Settings:RegisterClass("SettingsLib_Setting", _Setting)
 Settings._SettingClass = _Setting
@@ -263,11 +264,16 @@ function Settings.RegisterSetting(data)
         Settings:__Error("RegisterSetting", "Settings must declare ID and ModTable")
     end
 
-    local settingTable = Settings.SettingTypes[data.Type] ---@type SettingsLib_Setting
-    local setting = settingTable:Create(data)
+    -- Initialize optional fields to reduce overhead from OOP inheritance checks
+    if data.DeveloperOnly == nil then
+        data.DeveloperOnly = false
+    end
 
     -- Default to client context
     data.Context = data.Context or "Client"
+
+    local settingTable = Settings.SettingTypes[data.Type] ---@type SettingsLib_Setting
+    local setting = settingTable:Create(data)
 
     -- Pre-load saved client setting values.
     -- For server, we must wait for PersistentVars to be available.
