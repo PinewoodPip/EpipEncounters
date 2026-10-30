@@ -15,6 +15,35 @@ local BH = {
         HARRIED = "AMER_Icon_Status_Harried_",
     },
 
+    -- Maps status ID to the Battered amount it represents.
+    ---@type table<string, integer>
+    BATTERED_STATUSES = {
+        ["BATTERED_1"] = 1,
+        ["BATTERED_2"] = 2,
+        ["BATTERED_3"] = 3,
+        ["BATTERED_4"] = 4,
+        ["BATTERED_5"] = 5,
+        ["BATTERED_6"] = 6,
+        ["BATTERED_7"] = 7,
+        ["BATTERED_8"] = 8,
+        ["BATTERED_9"] = 9,
+        ["BATTERED_10"] = 10,
+    },
+    -- Maps status ID to the Harried amount it represents.
+    ---@type table<string, integer>
+    HARRIED_STATUSES = {
+        ["HARRIED_1"] = 1,
+        ["HARRIED_2"] = 2,
+        ["HARRIED_3"] = 3,
+        ["HARRIED_4"] = 4,
+        ["HARRIED_5"] = 5,
+        ["HARRIED_6"] = 6,
+        ["HARRIED_7"] = 7,
+        ["HARRIED_8"] = 8,
+        ["HARRIED_9"] = 9,
+        ["HARRIED_10"] = 10,
+    },
+
     ---@type table<string, Feature_DatabaseSync_DatabaseDefinition>
     Databases = {
         BufferedDamage = {
@@ -26,6 +55,9 @@ local BH = {
 }
 EpicEncounters.BatteredHarried = BH
 Epip.InitializeLibrary("EpicEncounters_BatteredHarried", BH)
+
+local _BATTERED_STATUSES_MAP = BH.BATTERED_STATUSES
+local _HARRIED_STATUSES_MAP = BH.HARRIED_STATUSES
 
 ---------------------------------------------
 -- CLASSES
@@ -46,24 +78,24 @@ Epip.InitializeLibrary("EpicEncounters_BatteredHarried", BH)
 function BH.GetStacks(char, type)
     local stacks = 0
     local lifetime = 0
-    local pattern = BH.STATUS_PATTERNS.BATTERED -- Default to Battered
-
+    local statusesMap = _BATTERED_STATUSES_MAP -- Default to Battered
     if type == "Harried" or type == "H" then
-        pattern = BH.STATUS_PATTERNS.HARRIED
+        statusesMap = _HARRIED_STATUSES_MAP
     end
 
-    -- Search statuses
-    for _,status in pairs(char:GetStatuses()) do
-        local amount = status:match(pattern)
-
+    -- Search for B/H statuses
+    -- Note: GetStatus() by statusID is O(n), so it is better to do a single pass with GetStatuses()
+    local statuses = char:GetStatusObjects() ---@type EclStatus[]
+    for _,status in pairs(statuses) do
+        local amount = statusesMap[status.StatusId]
         if amount then
-            stacks = tonumber(amount)
-            lifetime = char:GetStatus(status).CurrentLifeTime
+            stacks = amount
+            lifetime = status.CurrentLifeTime
             break
         end
     end
 
-    return stacks,lifetime
+    return stacks, lifetime
 end
 
 ---Returns the icon for a certain amount of a stack.
