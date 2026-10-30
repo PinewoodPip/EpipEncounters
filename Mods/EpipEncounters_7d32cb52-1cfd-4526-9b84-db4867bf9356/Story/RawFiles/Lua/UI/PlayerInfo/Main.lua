@@ -19,7 +19,6 @@ local PlayerInfo = {
         UNLINK = "UI_Game_Party_Split",
     },
 
-    previousCombatState = nil,
     nextCharacterSelectionIsManual = false,
     _OverrideApplied = false, -- Whether Epip's .swf override is applied.
 
@@ -46,6 +45,9 @@ local PlayerInfo = {
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
+
+local _PreviousCombatState = nil
+local _CachedCharacterBHStates = {} ---@type table<FlashCharacterHandle, {Battered: integer, Harried: integer, Visible: boolean}> Cached to avoid updating the UI unnecessarily.
 
 -- Apply .swf override
 if UIOverrideToggles.Settings.EnablePlayerInfoOverride:GetValue() == true then
@@ -278,24 +280,23 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
-function PlayerInfo.UpdatePlayers()
+---Updates the player portraits and B/H indicators.
+function PlayerInfo._UpdatePlayers()
     if not PlayerInfo._OverrideApplied then return end
     local root = PlayerInfo:GetRoot()
     local players = root.player_array
     local inCombat = Client.IsInCombat()
 
-    if inCombat ~= PlayerInfo.previousCombatState or GameState.IsPaused() then
+    if inCombat ~= _PreviousCombatState or GameState.IsPaused() then
         root.SetPartyInCombat(inCombat)
         root.STATUS_HOLDER_OPACITY = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_StatusHolderOpacity")
         root.STATUS_HOLDER_ALPHA_OFFSET = -255 * (1 - root.STATUS_HOLDER_OPACITY)
 
-        PlayerInfo.previousCombatState = inCombat
+        _PreviousCombatState = inCombat
     end
-
 
     for i=0,#players-1,1 do
         local player = players[i]
-
         PlayerInfo._UpdateBH(player)
     end
 end
@@ -315,25 +316,25 @@ function PlayerInfo.GetControlledCharacter()
     return char
 end
 
+---Selects a character to become the active client character, if possible.
 ---@param handle EntityHandle
 function PlayerInfo.SelectCharacter(handle)
     PlayerInfo:ExternalInterfaceCall("charSel", Ext.UI.HandleToDouble(handle), true)
 end
 
-local _LastPlayerBHStates = {} ---@type table<FlashCharacterHandle, {Battered: integer, Harried: integer, Visible: boolean}> Cached to avoid updating the UI unnecessarily.
 ---Updates the BH indicators for a player.
 ---@param player FlashMovieClip
 function PlayerInfo._UpdateBH(player)
     if not PlayerInfo._OverrideApplied then return end
     local char = Character.Get(player.characterHandle, true)
-    local lastState = _LastPlayerBHStates[player.characterHandle]
+    local lastState = _CachedCharacterBHStates[player.characterHandle]
     if not lastState then
         lastState = {
             Battered = nil,
             Harried = nil,
             Visible = nil,
         }
-        _LastPlayerBHStates[player.characterHandle] = lastState
+        _CachedCharacterBHStates[player.characterHandle] = lastState
     end
 
     local displaysVisible = PlayerInfo.Hooks.GetBHVisibility:Throw({
@@ -426,9 +427,9 @@ PlayerInfo:RegisterCallListener("statusHovered", function(_, charFlashHandle, st
     })
 end)
 
--- TODO optimize
+-- Update player portraits each tick.
 GameState.Events.RunningTick:Subscribe(function (_)
-    PlayerInfo.UpdatePlayers()
+    PlayerInfo._UpdatePlayers()
 end)
 
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
@@ -450,10 +451,10 @@ end)
 
 -- Update Epip's elements when player elements or statuses are updated.
 Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(_, _)
-    PlayerInfo.UpdatePlayers()
+    PlayerInfo._UpdatePlayers()
 end, "After")
 Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateStatuses", function(_, _, _, _)
-    PlayerInfo.UpdatePlayers()
+    PlayerInfo._UpdatePlayers()
 end, "After")
 
 -- Cleanup status data on expiry.
@@ -479,6 +480,11 @@ PlayerInfo:RegisterInvokeListener("updateInfos", function (ev)
 
     EncodeFlashArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, data, true)
 end, "Before")
+
+-- Clear cached B/H state for players that are removed from the UI.
+PlayerInfo:RegisterInvokeListener("removeInfo", function (_, characterFlashHandle)
+    _CachedCharacterBHStates[characterFlashHandle] = nil
+end)
 
 ---------------------------------------------
 -- SETUP
