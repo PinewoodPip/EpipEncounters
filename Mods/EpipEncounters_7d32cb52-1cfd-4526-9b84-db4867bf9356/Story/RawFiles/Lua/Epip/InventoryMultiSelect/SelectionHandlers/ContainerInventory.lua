@@ -115,6 +115,7 @@ ContainerInventory:RegisterCallListener("startDragging", function (ev, itemHandl
     local item = Item.Get(itemHandle, true)
     if MultiSelect.IsSelected(item) then -- Can only start multi-drag from a selected item.
         MultiSelect.StartMultiDrag()
+        ContainerInventory:PlaySound("UI_Game_Inventory_Click") -- For consistency with PartyInventory, which plays this sound on any mouse down over filled slots.
         ev:PreventAction()
     else
         MultiSelect.ClearSelections()
