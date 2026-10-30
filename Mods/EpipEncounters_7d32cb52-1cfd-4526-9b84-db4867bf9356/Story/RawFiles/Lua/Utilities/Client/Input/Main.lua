@@ -23,6 +23,8 @@ local Input = {
         Gui = {Name = "Windows", ShortName = "Win"},
     },
 
+    -- Mouse movement events.
+    ---@type set<InputRawType>
     MOTION_EVENTS = {
         motion = true,
         motion_xneg = true,
@@ -31,6 +33,22 @@ local Input = {
         motion_yneg = true,
     },
 
+    -- Controller stick movement events.
+    ---@type set<InputRawType>
+    CONTROLLER_MOTION_EVENTS = {
+        leftstick_xpos = true,
+        leftstick_xneg = true,
+        leftstick_ypos = true,
+        leftstick_yneg = true,
+
+        rightstick_xpos = true,
+        rightstick_xneg = true,
+        rightstick_ypos = true,
+        rightstick_yneg = true,
+    },
+
+    -- Maps raw input ID to movement axis.
+    ---@type table<InputRawType, "x"|"y">
     MOTION_AXIS = {
         motion_xneg = "x",
         motion_xpos = "x",
@@ -938,6 +956,7 @@ end
 
 -- Forward input events.
 local MOTION_EVENTS = Input.MOTION_EVENTS
+local CONTROLLER_MOTION_EVENTS = Input.CONTROLLER_MOTION_EVENTS
 Ext.Events.RawInput:Subscribe(function(e)
     local inputEventData = e.Input
     local id = tostring(inputEventData.Input.InputId)
@@ -949,10 +968,6 @@ Ext.Events.RawInput:Subscribe(function(e)
         Input.pressedKeys[id] = true
     else
         Input.pressedKeys[id] = nil
-    end
-
-    if not Input.MOTION_EVENTS[id] then
-        Input:Dump(e)
     end
 
     -- Track mouse movement
@@ -995,9 +1010,9 @@ Ext.Events.RawInput:Subscribe(function(e)
 
     Input.Events.KeyStateChanged:Throw(event)
 
-    -- Mouse movement does not trigger Key Pressed/Released
+    -- Mouse/stick movement does not trigger Key Pressed/Released
     -- This also prevents them from needlessly triggering InputActions
-    if not MOTION_EVENTS[id] then
+    if not MOTION_EVENTS[id] and not CONTROLLER_MOTION_EVENTS[id] then
         if state == "Released" then
             Input.Events.KeyReleased:Throw({
                 InputID = id,
