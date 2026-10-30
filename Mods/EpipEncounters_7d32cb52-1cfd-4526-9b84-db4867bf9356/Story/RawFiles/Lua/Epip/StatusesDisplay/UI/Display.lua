@@ -31,6 +31,8 @@ StatusesDisplay:RegisterClass("Feature_StatusesDisplay_Manager", Manager)
 ---@field FlashX number?
 ---@field FlashY number?
 ---@field UIScale number?
+---@field UIObjectFlashWidth number?
+---@field UIObjectFlashHeight number?
 
 ---------------------------------------------
 -- METHODS
@@ -226,7 +228,7 @@ function Manager:Update(dtSeconds)
         -- During a brief time window after creation, Resize() does not scale the UI properly,
         -- thus we must keep re-trying for a while before we can have the cache check apply.
         local wasResized = false
-        if playerInfoUIScale ~= cachedState.UIScale or not wasVisible or self._ForceRescaleTime >= 0 then
+        if playerInfoUIScale ~= cachedState.UIScale or not wasVisible or cachedState.UIObjectFlashWidth ~= uiObject.FlashSize[1] or cachedState.UIObjectFlashHeight ~= uiObject.FlashSize[2] or self._ForceRescaleTime >= 0 then
             uiObject:Resize(playerInfoUI.FlashMovieSize[1], playerInfoUI.FlashMovieSize[2], playerInfoUIScale)
             wasResized = true
         end
@@ -260,6 +262,10 @@ function Manager:Update(dtSeconds)
         cachedState.UIObjectX = pos[1]
         cachedState.UIObjectY = pos[2]
         cachedState.UIScale = playerInfoUIScale
+        -- Tracking the FlashSize is necessary as it is reset
+        -- when rescaling the viewport or exiting the GameMenu UI.
+        cachedState.UIObjectFlashWidth = uiObject.FlashSize[1]
+        cachedState.UIObjectFlashHeight = uiObject.FlashSize[2]
     end
 end
 
