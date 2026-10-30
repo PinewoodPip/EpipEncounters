@@ -12,14 +12,25 @@ local V = Vector.Create
 ---@field _CurrentStatusesPerRow integer
 ---@field _Delay integer
 ---@field _StatusPrefabInstances GenericUI_Prefab_Status[]
+---@field _ForceRescaleTime number Remaining time in seconds during which Resize() updates will be forced.
+---@field _CachedState Features.StatusesDisplay.Manager.CachedState Latest position values, to avoid unnecessary updates.
 ---@field GUID GUID
 local Manager = {
     UPDATE_INTERVAL = 0.2, -- In seconds.
     MIN_STATUSES_PER_ROW = 6,
     ROWS = 2,
     FLASH_POSITION = V(102, 2), -- Offset for the root within flash. Used to position the overlay UI properly regardless of resolution.
+
+    _ForceRescaleTime = 0.5
 }
 StatusesDisplay:RegisterClass("Feature_StatusesDisplay_Manager", Manager)
+
+---@class Features.StatusesDisplay.Manager.CachedState
+---@field UIObjectX number?
+---@field UIObjectY number?
+---@field FlashX number?
+---@field FlashY number?
+---@field UIScale number?
 
 ---------------------------------------------
 -- METHODS
@@ -36,6 +47,8 @@ function Manager.Create(char)
     instance._CurrentStatusesPerRow = instance.MIN_STATUSES_PER_ROW
     instance.GUID = Text.GenerateGUID()
     instance._StatusPrefabInstances = {}
+    instance._ForceRescaleTime = Manager._ForceRescaleTime
+    instance._CachedState = {}
 
     instance:_CreateUI()
 
@@ -150,7 +163,9 @@ end
 ---Updates the statuses on the display.
 ---@param dtSeconds number? An update will be forced if nil.
 function Manager:Update(dtSeconds)
+    local isForcedUpdate = dtSeconds == nil
     dtSeconds = dtSeconds or self._Delay -- Force-run an update if deltatime is nil.
+    local wasVisible = self.UI:IsVisible()
     local visible = self:_IsVisible()
     if visible then -- Calling Show() unnecessarily leads to mouse event issues with different layers!
         self.UI:TryShow()
@@ -159,6 +174,13 @@ function Manager:Update(dtSeconds)
         return -- Do not perform an update in this case
     end
     local char = Character.Get(self.CharacterHandle)
+
+    if self._ForceRescaleTime >= 0 and not isForcedUpdate then
+        local gameState = GameState.GetState()
+        if gameState == "Running" or gameState == "GameMasterPause" then
+            self._ForceRescaleTime = self._ForceRescaleTime - dtSeconds
+        end
+    end
 
     self._Delay = self._Delay - dtSeconds
     if self._Delay <= 0 then
@@ -192,24 +214,52 @@ function Manager:Update(dtSeconds)
     local playerInfoWidget = PlayerInfo.GetPlayerElement(char)
     if playerInfoWidget then -- TODO why is this nil on load?
         local uiObject = self.UI:GetUI()
+        local root = self.UI:GetRoot()
         local playerInfoUI = PlayerInfo:GetUI()
+        local playerInfoUIScale = playerInfoUI:GetUIScaleMultiplier()
         local playerInfoContainer = playerInfoUI:GetRoot().container_mc
         local pos = Vector.Create(playerInfoUI:GetPosition())
-        local root = self.UI:GetRoot()
+        local cachedState = self._CachedState
 
         -- Use same scale as the PlayerInfo UI.
         -- This is only necessary to support UIScaling; otherwise the UI already scales properly.
-        uiObject:Resize(playerInfoUI.FlashMovieSize[1], playerInfoUI.FlashMovieSize[2], playerInfoUI:GetUIScaleMultiplier())
+        -- During a brief time window after creation, Resize() does not scale the UI properly,
+        -- thus we must keep re-trying for a while before we can have the cache check apply.
+        local wasResized = false
+        if playerInfoUIScale ~= cachedState.UIScale or not wasVisible or self._ForceRescaleTime >= 0 then
+            uiObject:Resize(playerInfoUI.FlashMovieSize[1], playerInfoUI.FlashMovieSize[2], playerInfoUIScale)
+            wasResized = true
+        end
 
-        self.UI:SetPosition(pos)
-        root.x = playerInfoContainer.x + playerInfoWidget.x + self.FLASH_POSITION[1]
-        root.y = playerInfoContainer.y + playerInfoWidget.y + self.FLASH_POSITION[2]
+        -- Update UIObject position
+        if pos[1] ~= cachedState.UIObjectX or pos[2] ~= cachedState.UIObjectY then
+            self.UI:SetPosition(pos)
+        end
+
+        -- Update MovieClip position
+        -- Resizing the UI forces the root to be set to (0, 0),
+        -- so we must re-set it in that case as well
+        local newX = playerInfoContainer.x + playerInfoWidget.x + self.FLASH_POSITION[1]
+        local newY = playerInfoContainer.y + playerInfoWidget.y + self.FLASH_POSITION[2]
 
         -- Controller UI needs an offset for unknown reasons.
         if Client.IsUsingController() then
-            root.x = root.x + 51
-            root.y = root.y + 30
+            newX = newX + 51
+            newY = newY + 30
         end
+
+        if cachedState.FlashX ~= newX or not wasVisible or wasResized then
+            root.x = newX
+        end
+        if cachedState.FlashY ~= newY or not wasVisible or wasResized then
+            root.y = newY
+        end
+
+        cachedState.FlashX = newX
+        cachedState.FlashY = newY
+        cachedState.UIObjectX = pos[1]
+        cachedState.UIObjectY = pos[2]
+        cachedState.UIScale = playerInfoUIScale
     end
 end
 
