@@ -213,6 +213,7 @@ Character = {
     },
 
     NETMSG_CHARACTER_DIED = "CharacterLib.NetMsg.CharacterDied",
+    _NETMSG_ENABLED_STATUS_EVENTS = "CharacterLib.NetMsgs.EnabledStatusAppliedEvent",
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
