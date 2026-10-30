@@ -80,7 +80,7 @@ TooltipRepositioning.Settings.Position = TooltipRepositioning:RegisterSetting("P
 ---@param rightUIPos Vector2
 function TooltipRepositioning._PositionTooltip(ui, leftUIPos, rightUIPos)
     local tooltipWidth = TooltipRepositioning._GetTooltipWidth(ui)
-    local uiScale = ui:GetUI():GetUIScaleMultiplier()
+    local uiScale = ui:GetScaleMultiplier()
     local pos = leftUIPos
     if pos[1] < tooltipWidth then -- Position the tooltip on the right if there is no space on the left.
         pos = rightUIPos
@@ -104,7 +104,7 @@ function TooltipRepositioning._GetTooltipWidth(ui)
     if compareTooltipMC then -- Add the width of the compare tooltip, if there is one.
         tooltipWidth = tooltipWidth + compareTooltipMC.tooltip_mc.width - 30
     end
-    tooltipWidth = tooltipWidth * TooltipUI:GetUI():GetUIScaleMultiplier()
+    tooltipWidth = tooltipWidth * TooltipUI:GetScaleMultiplier()
 
     return tooltipWidth
 end

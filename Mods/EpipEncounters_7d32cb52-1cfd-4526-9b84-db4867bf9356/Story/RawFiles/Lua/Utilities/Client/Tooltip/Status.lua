@@ -26,7 +26,7 @@ function Tooltip.ShowStatusTooltip(status, options)
     local ui = Tooltip._GetCustomStatusTooltipUI()
     local mouseX, mouseY = Client.GetMousePosition()
     local position = options.Position or Vector.Create(mouseX, mouseY)
-    local scaleMultiplier = 1 / Client.UI.Tooltip:GetUI():GetUIScaleMultiplier() -- We're converting from screen space to flash space, so we'll need to multiply by 1 / scale.
+    local scaleMultiplier = 1 / Client.UI.Tooltip:GetScaleMultiplier() -- We're converting from screen space to flash space, so we'll need to multiply by 1 / scale.
 
     ui:ExternalInterfaceCall("showStatusTooltip", Client.Flash.ToFlashHandle(status.OwnerHandle), Client.Flash.ToFlashHandle(status.StatusHandle), position[1] * scaleMultiplier, position[2] * scaleMultiplier, 0, 0, options.Align or "") -- Offset can be applied onto Position instead.
 end

@@ -70,7 +70,7 @@ function Scrolling.IsMouseWithinScrollArea()
     -- Note: bounds check is necessary because moving the cursor to be in the gap between unchained
     -- player portraits will not cause PlayerInfo to become the active UI.
     -- Additionally, we do not want to scroll when hovering over the statuses display.
-    local xBounds = Scrolling.MOUSE_X_THRESHOLD * PlayerInfo:GetUI():GetUIScaleMultiplier()
+    local xBounds = Scrolling.MOUSE_X_THRESHOLD * PlayerInfo:GetScaleMultiplier()
     local uiManager = Ext.UI.GetUIObjectManager()
     local mouseX, _ = Client.GetMousePosition()
     local activeUIHandle = uiManager.PlayerStates[1].ActiveUIObjectHandle
@@ -89,7 +89,7 @@ end
 ---Considers UI scaling.
 ---@return number -- In flash units.
 function Scrolling._GetPlayerInfoFlashViewport()
-    local uiScale = PlayerInfo:GetUI():GetUIScaleMultiplier()
+    local uiScale = PlayerInfo:GetScaleMultiplier()
     local viewportHeight = Client.GetViewportSize()[2]
     local flashViewportHeight = viewportHeight / uiScale
     return flashViewportHeight - Scrolling.PLAYERINFO_BOTTOM_MARGIN
