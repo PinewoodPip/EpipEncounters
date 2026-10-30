@@ -131,10 +131,15 @@ function Slot.Create(ui, id, parent, requiredFeatures)
     obj._CanDrag = false
     obj._CanDrop = false
     obj._ClearAfterDrag = false
-    obj._AutoUpdateRemainingDelay = Slot.UPDATE_INTERVAL
     obj._Usable = true
     obj._RequiredFeatures = requiredFeatures
     obj._ValidObjectTypes = {["Skill"] = true, ["Item"] = true, ["Action"] = true, ["Template"] = true} -- Allow all object types by default
+
+    -- Randomize initial update cooldown
+    -- When mass-creating HotbarSlots,
+    -- this reduces the amount of slots that will update on the very same frame
+    -- somewhat helping with frame pacing
+    obj._AutoUpdateRemainingDelay = math.random() * Slot.UPDATE_INTERVAL
 
     obj.SlotElement = ui:CreateElement(id, "GenericUI_Element_Slot", parent)
     local slot = obj.SlotElement
