@@ -28,9 +28,7 @@ function AMERUI.GetCurrentPage(instance)
 end
 
 Ext.Osiris.RegisterListener("PROC_AMER_UI_Page_PageBecame", 3, "after", function(instance, interface, page)
-    
     local char = AMERUI.GetCharOfInstance(instance)
-    
     AMERUI.UpdateState(char, instance, interface, page)
 end)
 
@@ -39,7 +37,7 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_ActiveCharChanging", 5, "after", funct
     AMERUI.UpdateState(newChar, instance, interface, AMERUI.GetCurrentPage(instance))
 end)
 
-Ext.Osiris.RegisterListener("PROC_AMER_UI_ExitUI", 3, "after", function(instance, char, ui)
+Ext.Osiris.RegisterListener("PROC_AMER_UI_ExitUI", 3, "after", function(_, char, _)
     AMERUI.ClearState(char)
 end)
 
@@ -47,12 +45,23 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Element interactions.
-Ext.Osiris.RegisterListener("CharacterItemEvent", 3, "after", function(char, item, event)
-    -- Element wheels.
+-- Throw events for element wheel scrolling.
+Ext.Osiris.RegisterListener("CharacterItemEvent", 3, "after", function(_, item, event)
+    local direction = nil
     if event == AMERUI.ITEM_EVENTS.ELEMENTWHEEL_SCROLL_DOWN then
-        AMERUI:FireGlobalEvent("ElementWheelScrolled", item, -1)
+        direction = -1
     elseif event == AMERUI.ITEM_EVENTS.ELEMENTWHEEL_SCROLL_UP then
-        AMERUI:FireGlobalEvent("ElementWheelScrolled", item, 1)
+        direction = 1
+    end
+    if direction then
+        local wheel = Item.Get(item)
+        AMERUI.Events.ElementWheelScrolled:Throw({
+            Item = wheel,
+            Direction = direction,
+        })
+        Net.Broadcast(AMERUI.NETMSG_ELEMENTWHEEL_SCROLLED, {
+            ItemNetID = wheel.NetID,
+            Direction = direction,
+        })
     end
 end)

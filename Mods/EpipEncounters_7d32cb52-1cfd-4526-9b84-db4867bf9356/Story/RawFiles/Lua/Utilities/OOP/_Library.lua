@@ -575,27 +575,6 @@ function Library:ReturnFromHooks(event, defaultValue, ...)
     return Utilities.Hooks.ReturnFromHooks(self.__name, event, defaultValue, ...)
 end
 
----Fire an event to all contexts and peers.
----@deprecated
----@param event string
----@vararg any Event parameters.
-function Library:FireGlobalEvent(event, ...)
-    self:FireEvent(event, ...)
-
-    -- Fire event 
-    Ext.Net.BroadcastMessage("EPIPFeature_GlobalEvent", Ext.Json.Stringify({
-        Module = self.__name,
-        Event = event,
-        Args = {...},
-    }))
-end
-
-Ext.RegisterNetListener("EPIPFeature_GlobalEvent", function(_, payload)
-    payload = Ext.Json.Parse(payload)
-
-    Utilities.Hooks.FireEvent(payload.Module, payload.Event, table.unpack(payload.Args))
-end)
-
 ---------------------------------------------
 -- PROFILING
 ---------------------------------------------
