@@ -46,6 +46,9 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 local SubscribableEventParamsMetatable = {__index = SubscribableEventParams}
 local PreventableEventParamsMetatable = {__index = PreventableEventParams}
 
+-- Reused for empty events to avoid allocating tables for functionality like `StopPropagation()`
+local _EmptyEventTable = {} ---@type Event_Params|PreventableEventParams
+
 ---------------------------------------------
 -- COMMON EVENT PARAMETER CLASSES
 ---------------------------------------------
@@ -220,8 +223,13 @@ function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO allow unsubcribing 
 end
 
 function SubscribableEvent:Throw(event)
+	if event == nil then
+		_EmptyEventTable.Stopped = false
+		_EmptyEventTable.Prevented = nil
+		event = _EmptyEventTable
+	end
 	local cur = self.First
-	event = event or {}
+	if not cur then return event end
 
 	if type(event) == "table" then
 		setmetatable(event, self.Preventable and PreventableEventParamsMetatable or SubscribableEventParamsMetatable)
