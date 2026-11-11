@@ -203,24 +203,22 @@ end
 ---------------------------------------------
 
 -- Listen for keybinds to open the UI.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == "EpipEncounters_DebugCheats_OpenUI" then
-        ---@type Feature_DebugCheats_Context
-        local context = "Ground"
-        local entityHandle = nil
-        local pointerChar = Pointer.GetCurrentCharacter(nil, true)
-        local pointerItem = Pointer.GetCurrentItem()
+Client.Input.RegisterActionExecutedListener("EpipEncounters_DebugCheats_OpenUI", function (_)
+    ---@type Feature_DebugCheats_Context
+    local context = "Ground"
+    local entityHandle = nil
+    local pointerChar = Pointer.GetCurrentCharacter(nil, true)
+    local pointerItem = Pointer.GetCurrentItem()
 
-        if pointerChar then
-            context = "Character"
-            entityHandle = pointerChar.Handle
-        elseif pointerItem then
-            context = "Item"
-            entityHandle = pointerItem.Handle
-        end
-
-        UI.Setup(context, entityHandle)
+    if pointerChar then
+        context = "Character"
+        entityHandle = pointerChar.Handle
+    elseif pointerItem then
+        context = "Item"
+        entityHandle = pointerItem.Handle
     end
+
+    UI.Setup(context, entityHandle)
 end)
 
 -- Render built-in action types.

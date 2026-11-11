@@ -229,7 +229,7 @@ function HotbarGroup:UpdatePosition()
     local offset = rows * 2 -- Magic numbers galore as usual
     if rows == 1 then offset = offset + 5 end
     local hotbarTop = rowHeight * rows + offset
-    hotbarTop = hotbarTop * self:GetUI():GetUIScaleMultiplier() -- Apply UIScaling
+    hotbarTop = hotbarTop * self:GetScaleMultiplier() -- Apply UIScaling
 
     -- Calculate group height
     local groupHeight = self._Container:GetHeight()
@@ -238,7 +238,7 @@ function HotbarGroup:UpdatePosition()
     else
         groupHeight = groupHeight + (7 - rows)
     end
-    groupHeight = groupHeight * self:GetUI():GetUIScaleMultiplier() -- Apply UIScaling
+    groupHeight = groupHeight * self:GetScaleMultiplier() -- Apply UIScaling
 
     -- Reposition group to snap to the top of the hotbar
     local x, _ = self:GetPosition()

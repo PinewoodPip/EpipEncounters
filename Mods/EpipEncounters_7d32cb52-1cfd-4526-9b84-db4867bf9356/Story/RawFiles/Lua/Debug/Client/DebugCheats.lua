@@ -87,7 +87,7 @@ for id,data in pairs(Data.Game.FlexStats) do
 end
 
 FLEXSTAT_CHEATS.Generic = {}
-for i,id in pairs(Epip.Features.DebugCheats.VISIBLE_GENERIC_FLEXSTATS) do
+for _,id in pairs(Epip.Features.DebugCheats.VISIBLE_GENERIC_FLEXSTATS) do
     local data = Data.Game.FlexStats[id]
 
     local entry = {
@@ -138,7 +138,8 @@ ContextMenu.RegisterMenuHandler("epip_Cheats", function(char)
     })
 end)
 
-ContextMenu.RegisterVanillaMenuHandler("Character", function(char)
+-- Add debug cheats submenu to character context menus.
+ContextMenu.RegisterVanillaMenuHandler("Character", function(_)
     if Epip.IsDeveloperMode() then
         ContextMenu.AddElements(nil, {
             id = "main",
@@ -261,8 +262,8 @@ end)
 ---------------------------------------------
 
 -- Amount of cheated stats is tracked through tags
-ContextMenu.RegisterStatDisplayHook("epip_Cheats_Stats_AddFlexStat", function(originalValue, character, elementParams)
-    for i,tag in pairs(character:GetTags()) do
+ContextMenu.RegisterStatDisplayHook("epip_Cheats_Stats_AddFlexStat", function(_, character, elementParams)
+    for _,tag in pairs(character:GetTags()) do
         local stat,amount = tag:match("PIP_CHEATEDSTATS_(.*)_(-?[0-9]*)$")
         if stat == elementParams.id and amount then
             return amount
@@ -293,7 +294,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Stats_AddFlexStat", "statButton
 end)
 
 -- Add tag.
-ContextMenu.RegisterElementListener("epip_Cheats_AddTag", "buttonPressed", function(character, params)
+ContextMenu.RegisterElementListener("epip_Cheats_AddTag", "buttonPressed", function(character, _)
     MessageBox.Open({
         ID = "epip_Cheats_AddTag",
         NetID = character.NetID,
@@ -306,12 +307,12 @@ ContextMenu.RegisterElementListener("epip_Cheats_AddTag", "buttonPressed", funct
     })
 end)
 
-MessageBox.RegisterMessageListener("epip_Cheats_AddTag", MessageBox.Events.InputSubmitted, function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_AddTag", MessageBox.Events.InputSubmitted, function(text, _, data)
     Net.PostToServer("EPIP_CHEATS_ADDTAG", {NetID = data.NetID, Tag = text})
 end)
 
 -- Clear tag.
-ContextMenu.RegisterElementListener("epip_Cheats_RemoveTag", "buttonPressed", function(character, params)
+ContextMenu.RegisterElementListener("epip_Cheats_RemoveTag", "buttonPressed", function(character, _)
     MessageBox.Open({
         ID = "epip_Cheats_RemoveTag",
         NetID = character.NetID,
@@ -324,12 +325,12 @@ ContextMenu.RegisterElementListener("epip_Cheats_RemoveTag", "buttonPressed", fu
     })
 end)
 
-MessageBox.RegisterMessageListener("epip_Cheats_RemoveTag", MessageBox.Events.InputSubmitted, function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_RemoveTag", MessageBox.Events.InputSubmitted, function(text, _, data)
     Net.PostToServer("EPIP_CHEATS_REMOVETAG", {NetID = data.NetID, Tag = text})
 end)
 
 -- Flexstat spell.
-ContextMenu.RegisterElementListener("epip_Cheats_Stats_FlexStats_Spell", "buttonPressed", function(character, params)
+ContextMenu.RegisterElementListener("epip_Cheats_Stats_FlexStats_Spell", "buttonPressed", function(character, _)
     MessageBox.Open({
         ID = "epip_Cheats_FlexStats_Spell",
         NetID = character.NetID,
@@ -360,7 +361,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_AddStatus", "buttonPressed", fu
     })
 end)
 
-MessageBox.RegisterMessageListener("epip_Cheats_AddStatus", MessageBox.Events.InputSubmitted, function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_AddStatus", MessageBox.Events.InputSubmitted, function(text, _, data)
     local status, duration = table.unpack(Text.Split(text, " "))
     if duration then duration = duration * 6 else duration = 6 end
 
@@ -370,7 +371,7 @@ MessageBox.RegisterMessageListener("epip_Cheats_AddStatus", MessageBox.Events.In
 end)
 
 -- Teleport to object.
-ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", function(character, params)
+ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", function(character, _)
     MessageBox.Open({
         ID = "epip_Cheats_Teleport",
         NetID = character.NetID,
@@ -384,28 +385,25 @@ ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", fun
 end)
 
 -- Log RootTemplate GUID.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == "EpipEncounters_Debug_LogRootTemplate" then
-        local entity = Ext.UI.GetPickingState(1).HoverItem
-        if entity then
-            entity = Item.Get(entity)
-        else
-            entity = Ext.UI.GetPickingState(1).HoverEntity
-
-            if entity then
-                entity = Character.Get(entity)
-            end
-        end
+Client.Input.RegisterActionExecutedListener("EpipEncounters_Debug_LogRootTemplate", function (_)
+    local entity = Ext.UI.GetPickingState(1).HoverItem
+    if entity then
+        entity = Item.Get(entity)
+    else
+        entity = Ext.UI.GetPickingState(1).HoverEntity
 
         if entity then
-            -- local guid = entity.RootTemplate.Name .. "_" .. entity.RootTemplate.Id
-            local guid = entity.RootTemplate.RootTemplate
-            if guid == "" then guid = entity.RootTemplate.Id end
-
-            print(guid)
-
-            Client.CopyToClipboard(guid)
+            entity = Character.Get(entity)
         end
+    end
+
+    if entity then
+        local guid = entity.RootTemplate.RootTemplate
+        if guid == "" then guid = entity.RootTemplate.Id end
+
+        print(guid)
+
+        Client.CopyToClipboard(guid)
     end
 end)
 
@@ -422,7 +420,7 @@ end)
 --     end
 -- end)
 
-MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.InputSubmitted, function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.InputSubmitted, function(text, _, data)
     Net.PostToServer("EPIP_CHEATS_TELEPORTTO", {NetID = data.NetID, TargetGUID = text})
 end)
 
@@ -455,7 +453,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_CopyGUID", "buttonPressed", fun
 end)
 
 -- Add SpecialLogic.
-ContextMenu.RegisterElementListener("epip_Cheats_SpecialLogic", "buttonPressed", function(character, params)
+ContextMenu.RegisterElementListener("epip_Cheats_SpecialLogic", "buttonPressed", function(character, _)
     MessageBox.Open({
         ID = "epip_Cheats_SpecialLogic",
         NetID = character.NetID,

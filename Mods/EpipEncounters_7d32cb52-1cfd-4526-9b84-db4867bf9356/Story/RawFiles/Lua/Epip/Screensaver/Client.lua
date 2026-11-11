@@ -74,7 +74,7 @@ function UI:_Initialize()
 
         -- Update the logo position each tick.
         GameState.Events.RunningTick:Subscribe(function (ev)
-            local scale = UI:GetUI():GetUIScaleMultiplier()
+            local scale = UI:GetScaleMultiplier()
             local viewport = Client.GetViewportSize()
             local pos = UI._Pos
             local velocity = UI._Velocity

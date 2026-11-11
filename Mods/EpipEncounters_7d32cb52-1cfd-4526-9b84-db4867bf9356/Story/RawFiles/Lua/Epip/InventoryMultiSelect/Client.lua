@@ -246,22 +246,22 @@ end)
 -- This is necessary to resolve a race condition:
 -- the input action is released before the various UIs's "slotUp"-like events
 -- can fire. 
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action == MultiSelect.InputActions.ToggleSelection or ev.Action == MultiSelect.InputActions.SelectRange then
-        MultiSelect._LatestInputAction = ev.Action
-    end
-end)
-Client.Input.Events.ActionReleased:Subscribe(function (ev)
-    if ev.Action == MultiSelect.InputActions.ToggleSelection or ev.Action == MultiSelect.InputActions.SelectRange then
-        MultiSelect._LatestInputAction = ev.Action
+local function OnSelectionActionExecuted(ev)
+    MultiSelect._LatestInputAction = ev.Action
+end
+Client.Input.RegisterActionExecutedListener(MultiSelect.InputActions.ToggleSelection, OnSelectionActionExecuted)
+Client.Input.RegisterActionExecutedListener(MultiSelect.InputActions.SelectRange, OnSelectionActionExecuted)
+local function OnSelectionActionReleased(ev)
+    MultiSelect._LatestInputAction = ev.Action
 
-        local previousTimer = MultiSelect._RemoveLatestInputActionTimer
-        if previousTimer and not previousTimer:IsFinished() then
-            previousTimer:Cancel()
-            MultiSelect._RemoveLatestInputActionTimer = nil
-        end
-        MultiSelect._RemoveLatestInputActionTimer = Timer.StartTickTimer(MultiSelect._LATEST_INPUT_ACTION_REMOVE_TIME, function (_)
-            MultiSelect._LatestInputAction = nil
-        end)
+    local previousTimer = MultiSelect._RemoveLatestInputActionTimer
+    if previousTimer and not previousTimer:IsFinished() then
+        previousTimer:Cancel()
+        MultiSelect._RemoveLatestInputActionTimer = nil
     end
-end)
+    MultiSelect._RemoveLatestInputActionTimer = Timer.StartTickTimer(MultiSelect._LATEST_INPUT_ACTION_REMOVE_TIME, function (_)
+        MultiSelect._LatestInputAction = nil
+    end)
+end
+Client.Input.RegisterActionReleasedListener(MultiSelect.InputActions.ToggleSelection, OnSelectionActionReleased)
+Client.Input.RegisterActionReleasedListener(MultiSelect.InputActions.SelectRange, OnSelectionActionReleased)

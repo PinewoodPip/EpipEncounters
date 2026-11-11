@@ -197,6 +197,8 @@ function Generic._ForwardUICall(ui, call, eventName, fields)
     ui:RegisterCallListener(call, function(_, id, ...)
         local element = ui:GetElementByID(id)
         if not element then return end -- TODO Does this ever happen? If so, investigate
+        local elementEvent = rawget(element.Events, eventName) -- Events are created lazily
+        if not elementEvent then return end
 
         local event = {}
         local params = {...}
@@ -205,7 +207,7 @@ function Generic._ForwardUICall(ui, call, eventName, fields)
             event[fields[i]] = param
         end
 
-        element.Events[eventName]:Throw(event)
+        elementEvent:Throw(event)
     end)
 end
 

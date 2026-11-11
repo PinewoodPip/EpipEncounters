@@ -301,51 +301,50 @@ end)
 ---------------------------------------------
 
 -- Interacting with furniture.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    local action = ev.Action.ID
-    if action == "EpipEncounters_Housing_MoveFurniture" then
-        local pointer = Ext.UI.GetPickingState(1)
-        local handle = pointer.HoverItem or pointer.PlaceableEntity
-        -- local handle = pointer.HoverItem
+Client.Input.RegisterActionExecutedListener("EpipEncounters_Housing_MoveFurniture", function (_)
+    local pointer = Ext.UI.GetPickingState(1)
+    local handle = pointer.HoverItem or pointer.PlaceableEntity
+    -- local handle = pointer.HoverItem
 
-        if Housing.IsMovingFurniture() then
-            Housing.PlaceMovingFurniture()
-        elseif handle then
-            local obj = Ext.Entity.GetGameObject(handle)
+    if Housing.IsMovingFurniture() then
+        Housing.PlaceMovingFurniture()
+    elseif handle then
+        local obj = Ext.Entity.GetGameObject(handle)
 
-            if obj then
-                Housing.SelectFurniture(obj, handle)
-            end
-        end
-    elseif Housing.IsMovingFurniture() then
-        local obj = Housing.GetSelectedFurniture()
-        -- local entity = obj:GetEntity()
-
-        if action == "EpipEncounters_Housing_RaiseFurniture" or action == "EpipEncounters_Housing_LowerFurniture" then -- Raise/lower furniture.
-            local offset = Housing.furnitureYAxisStep
-            if action == "EpipEncounters_Housing_LowerFurniture" then
-                offset = -offset
-            end
-
-            obj.PositionOffset = {obj.PositionOffset[1], obj.PositionOffset[2] + offset, obj.PositionOffset[3]}
-        elseif action == "EpipEncounters_Housing_RotateFurniture_Plus" or action == "EpipEncounters_Housing_RotateFurniture_Minus" then
-            -- TODO
-            -- local rotation = entity.Rotation
-            -- local offset = Housing.FURNITURE_ROTATION_STEP
-            -- if action == "EpipEncounters_Housing_RotateFurniture_Minus" then
-            --     offset = -offset
-            -- end
-
-            -- local angles = Ext.Math.ExtractEulerAngles(rotation)
-            -- local rotationMatrix = Ext.Math.BuildRotation3({1, 0, 0}, 10)
-            -- rotation = Ext.Math.BuildFromEulerAngles3(angles)
-            
-            -- entity.Rotation = Ext.Math.Rotate(rotation, 90, {1, 0, 0})
-
-            -- _D(rotation)
+        if obj then
+            Housing.SelectFurniture(obj, handle)
         end
     end
 end)
+
+-- Raise/lower furniture.
+---@param offset number
+local function OffsetSelectedFurniture(offset)
+    local obj = Housing.GetSelectedFurniture()
+    obj.PositionOffset = {obj.PositionOffset[1], obj.PositionOffset[2] + offset, obj.PositionOffset[3]}
+end
+Client.Input.RegisterActionExecutedListener("EpipEncounters_Housing_RaiseFurniture", function (_)
+    OffsetSelectedFurniture(Housing.furnitureYAxisStep)
+end, {EnabledFunctor = Housing.IsMovingFurniture})
+Client.Input.RegisterActionExecutedListener("EpipEncounters_Housing_LowerFurniture", function (_)
+    OffsetSelectedFurniture(-Housing.furnitureYAxisStep)
+end, {EnabledFunctor = Housing.IsMovingFurniture})
+
+-- TODO rotate furniture ("EpipEncounters_Housing_RotateFurniture_Plus" / "EpipEncounters_Housing_RotateFurniture_Minus")
+-- local entity = obj:GetEntity()
+-- local rotation = entity.Rotation
+-- local offset = Housing.FURNITURE_ROTATION_STEP
+-- if action == "EpipEncounters_Housing_RotateFurniture_Minus" then
+--     offset = -offset
+-- end
+
+-- local angles = Ext.Math.ExtractEulerAngles(rotation)
+-- local rotationMatrix = Ext.Math.BuildRotation3({1, 0, 0}, 10)
+-- rotation = Ext.Math.BuildFromEulerAngles3(angles)
+
+-- entity.Rotation = Ext.Math.Rotate(rotation, 90, {1, 0, 0})
+
+-- _D(rotation)
 
 -- Place down moving furniture.
 Input.Events.KeyStateChanged:Subscribe(function (ev)

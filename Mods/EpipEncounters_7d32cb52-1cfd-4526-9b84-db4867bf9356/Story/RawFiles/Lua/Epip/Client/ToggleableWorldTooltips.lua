@@ -87,21 +87,19 @@ end
 ---------------------------------------------
 
 -- Toggle the feature when the action is executed.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == ToggleableWorldTooltips.INPUT_ACTION then
-        local binding = Input.GetBinding(ToggleableWorldTooltips.SHOW_WORLD_TOOLTIPS_INPUTEVENTID, "Key")
+Client.Input.RegisterActionExecutedListener(ToggleableWorldTooltips.INPUT_ACTION, function (_)
+    local binding = Input.GetBinding(ToggleableWorldTooltips.SHOW_WORLD_TOOLTIPS_INPUTEVENTID, "Key")
 
-        if ToggleableWorldTooltips.active then
-            ToggleableWorldTooltips._Deactivate()
-        else
-            if binding then
-                ToggleableWorldTooltips._Activate()
-            else -- Show warning that the vanilla key must be bound
-                MessageBox.Open({
-                    Header = "",
-                    Message = ToggleableWorldTooltips.TranslatedStrings.Warning_VanillaKeyNotBound:GetString(),
-                })
-            end
+    if ToggleableWorldTooltips.active then
+        ToggleableWorldTooltips._Deactivate()
+    else
+        if binding then
+            ToggleableWorldTooltips._Activate()
+        else -- Show warning that the vanilla key must be bound
+            MessageBox.Open({
+                Header = "",
+                Message = ToggleableWorldTooltips.TranslatedStrings.Warning_VanillaKeyNotBound:GetString(),
+            })
         end
     end
 end)

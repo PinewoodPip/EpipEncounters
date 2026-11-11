@@ -1033,11 +1033,6 @@ Hotbar:RegisterInvokeListener("showSkillBar", function (_, enabled)
     Hotbar.elementsToggled = enabled
 end, "After")
 
--- Listen for engine requests to refresh slots.
-Hotbar:RegisterInvokeListener("updateSlots", function (_, _, _)
-    Hotbar.Refresh()
-end)
-
 -- Listen for player handle being set.
 Hotbar:RegisterInvokeListener("setPlayerHandle", function (_, playerHandle)
     Hotbar.UpdateSlotTextures()
@@ -1049,8 +1044,9 @@ Hotbar:RegisterInvokeListener("setPlayerHandle", function (_, playerHandle)
     Hotbar.RenderSlots()
 end, "After")
 
--- Update slots whenever the engine would request so.
+-- Update hotbar & slots whenever the engine would request so.
 Hotbar:RegisterInvokeListener("updateSlots", function (_, _)
+    Hotbar.Refresh()
     Hotbar.RenderSlots()
 end)
 
@@ -1157,13 +1153,11 @@ GameState.Events.GameReady:Subscribe(function ()
     Hotbar.Refresh()
 end, {EnabledFunctor = function () return not Client.IsUsingController() end})
 
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    local actionPattern = "EpipEncounters_Hotbar_(%d+)"
-    local index = ev.Action.ID:match(actionPattern)
-    if index then
-        Hotbar.PressHotkey(tonumber(index))
-    end
-end)
+for i=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
+    Client.Input.RegisterActionExecutedListener("EpipEncounters_Hotbar_" .. i, function (_)
+        Hotbar.PressHotkey(i)
+    end)
+end
 
 -- Refresh the hotbar elements preiodically.
 GameState.Events.RunningTick:Subscribe(function (e)

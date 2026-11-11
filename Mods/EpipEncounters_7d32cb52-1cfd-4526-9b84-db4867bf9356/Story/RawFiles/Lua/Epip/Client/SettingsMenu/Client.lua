@@ -108,7 +108,6 @@ local TSK = Menu.TranslatedStrings
 
 ---@class Feature_SettingsMenu_Setting : SettingsLib_Setting
 ---@field Visible boolean? Defaults to true.
----@field DeveloperOnly boolean? Defaults to false.
 ---@field RequiredMods GUID[]? If present, all mods will need to be loaded for the setting to be visible.
 ---@field RequiresPipFork boolean? If `true`, the setting will only be visible if the Pip fork of the extender is installed. Defaults to `false`.
 ---@field RequiresReload boolean? If `true`, a message box will be shown after applying changes to the setting, hinting the user that they need to reload the session for changes to take effect.

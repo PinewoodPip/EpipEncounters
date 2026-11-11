@@ -27,6 +27,8 @@
 ---@alias listenabletype "Event"|"Hook"
 ---@alias language string
 ---@alias inputdevice "KeyboardAndMouse"|"Controller"
+---@alias UI.UICall string
+---@alias UI.UIInvoke string
 
 ---@alias UIObjectHandle ComponentHandle
 

@@ -115,15 +115,13 @@ GameState.Events.GamePaused:Subscribe(function (_)
 end)
 
 -- Listen for keybind to open the menu.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == "EpipEncounters_Debug_OpenDebugMenu" then
-        local ui = DebugMenu.UI
+Client.Input.RegisterActionExecutedListener("EpipEncounters_Debug_OpenDebugMenu", function (_)
+    local ui = DebugMenu.UI
 
-        if ui:IsVisible() then
-            ui:Hide()
-        else
-            ui:Show()
-        end
+    if ui:IsVisible() then
+        ui:Hide()
+    else
+        ui:Show()
     end
 end)
 

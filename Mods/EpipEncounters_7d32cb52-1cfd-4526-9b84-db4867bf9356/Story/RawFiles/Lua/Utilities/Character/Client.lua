@@ -116,6 +116,22 @@ Net.RegisterListener("EPIP_CharacterLib_StatusApplied", function (payload)
         end
     end
 end)
+-- Request to enable the StatusApplied event client-side if there are any subscribers.
+-- It is otherwise disabled to avoid unnecessary NetMsg overhead.
+local _StatusAppliedEventEnabled = false
+Character.Events.StatusApplied.Subscribe = function (self, callback, opts, stringID)
+    if not _StatusAppliedEventEnabled then
+        if GameState.IsInRunningSession() then
+            Net.PostToServer(Character._NETMSG_ENABLED_STATUS_EVENTS)
+        else
+            GameState.Events.ClientReady:Subscribe(function (_)
+                Net.PostToServer(Character._NETMSG_ENABLED_STATUS_EVENTS)
+            end)
+        end
+        _StatusAppliedEventEnabled = true
+    end
+    return SubscribableEvent.Subscribe(self, callback, opts, stringID)
+end
 
 -- Forward item equip events.
 Net.RegisterListener("EPIP_CharacterLib_ItemEquipped", function (payload)

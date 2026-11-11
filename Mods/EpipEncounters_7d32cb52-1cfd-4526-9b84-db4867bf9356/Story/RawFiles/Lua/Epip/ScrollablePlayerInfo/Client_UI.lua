@@ -35,7 +35,7 @@ function Overlay._UpdateVisibility()
     local isOverPortraits = Overlay._IsUsingScrollbar or Scrolling.IsMouseWithinScrollArea()
     if isOverPortraits then
         Overlay:SetPositionRelativeToViewport("topleft", "topleft") -- For some reason, if this is done only on Setup(), then the position will gain a horizontal margin upon doing a Lua reset
-        Overlay:Move(Vector.Create(0, Overlay.TOP_MARGIN * Overlay:GetUI():GetUIScaleMultiplier()))
+        Overlay:Move(Vector.Create(0, Overlay.TOP_MARGIN * Overlay:GetScaleMultiplier()))
         Overlay:TryShow()
     else
         Overlay:TryHide()

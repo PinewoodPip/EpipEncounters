@@ -75,13 +75,11 @@ end
 ---------------------------------------------
 
 -- Listen for respective Input actions.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    local action = ev.Action.ID
-    if action == "EpicEncounters_Meditate" then
-        Actions.TryExecuteAction(ev.Character, "EE_Meditate")
-    elseif action == "EpipEncounters_SourceInfuse" then
-        Actions.TryExecuteAction(ev.Character, "EE_SourceInfuse")
-    end
+Client.Input.RegisterActionExecutedListener("EpicEncounters_Meditate", function (ev)
+    Actions.TryExecuteAction(ev.Character, "EE_Meditate")
+end)
+Client.Input.RegisterActionExecutedListener("EpipEncounters_SourceInfuse", function (ev)
+    Actions.TryExecuteAction(ev.Character, "EE_SourceInfuse")
 end)
 
 -- Listen for requests to show "bedroll missing" message.

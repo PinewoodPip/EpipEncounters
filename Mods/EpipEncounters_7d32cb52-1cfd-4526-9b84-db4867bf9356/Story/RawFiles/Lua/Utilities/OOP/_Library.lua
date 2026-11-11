@@ -11,7 +11,7 @@ local Print = Ext.Utils.Print
 ---@field _Classes table<string, Class> Subclasses registered for this library.
 ---@field __ID string
 ---@field __ModTable string
----@field __IsDebug boolean
+---@field __IsDebug boolean?
 ----@field TranslatedStrings table<TranslatedStringHandle, Library_TranslatedString> Initializable.
 ----@field Events table<string, Event> Initializable. -- These 2 fields cannot be included as they break auto-complete.
 ----@field Hooks table<string, Event> Initializable.
@@ -315,14 +315,14 @@ end
 ---Only works in Developer mode.
 function Library:Debug()
     if Epip.IsDeveloperMode() then
-        self.IS_DEBUG = true
+        self.__IsDebug = true
     end
 end
 
 ---Returns whether `:Debug()` has been ran successfully.
 ---@return boolean
 function Library:IsDebug()
-    return self.IS_DEBUG
+    return self.__IsDebug
 end
 
 ---------------------------------------------
@@ -575,27 +575,6 @@ function Library:ReturnFromHooks(event, defaultValue, ...)
     return Utilities.Hooks.ReturnFromHooks(self.__name, event, defaultValue, ...)
 end
 
----Fire an event to all contexts and peers.
----@deprecated
----@param event string
----@vararg any Event parameters.
-function Library:FireGlobalEvent(event, ...)
-    self:FireEvent(event, ...)
-
-    -- Fire event 
-    Ext.Net.BroadcastMessage("EPIPFeature_GlobalEvent", Ext.Json.Stringify({
-        Module = self.__name,
-        Event = event,
-        Args = {...},
-    }))
-end
-
-Ext.RegisterNetListener("EPIPFeature_GlobalEvent", function(_, payload)
-    payload = Ext.Json.Parse(payload)
-
-    Utilities.Hooks.FireEvent(payload.Module, payload.Event, table.unpack(payload.Args))
-end)
-
 ---------------------------------------------
 -- PROFILING
 ---------------------------------------------
@@ -604,7 +583,7 @@ end)
 ---**Does nothing outside of Debug mode.**
 ---@param id string Session ID.
 function Library:StartProfiling(id)
-    if self.IS_DEBUG then
+    if self.__IsDebug then
         Profiling.Start(self:GetPackagePrefix() .. id)
     end
 end
@@ -613,7 +592,7 @@ end
 ---**Does nothing outside of Debug mode.**
 ---@param stepID string
 function Library:AddProfilingStep(stepID)
-    if self.IS_DEBUG then
+    if self.__IsDebug then
         Profiling.Step(stepID) -- No prefix necessary
     end
 end
@@ -621,7 +600,7 @@ end
 ---Ends the current profiling session.
 ---**Does nothing outside of Debug mode.**
 function Library:EndProfiling()
-    if self.IS_DEBUG then
+    if self.__IsDebug then
         Profiling.End()
     end
 end

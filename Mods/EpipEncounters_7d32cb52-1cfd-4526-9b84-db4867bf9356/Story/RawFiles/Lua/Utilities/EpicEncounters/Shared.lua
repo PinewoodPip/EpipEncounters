@@ -35,12 +35,21 @@ Epip.InitializeLibrary("EpicEncounters", EpicEncounters)
 -- METHODS
 ---------------------------------------------
 
+local _IsModLoaded = nil
+local _SimulateNoEESettingValue = nil
 ---Returns whether EE Core is loaded.
 ---@return boolean
 function EpicEncounters.IsEnabled()
-    local devSettingValue = Settings.GetSettingValue("Epip_Developer", "Developer_SimulateNoEE")
-
-    return Mod.IsLoaded(Mod.GUIDS.EE_CORE) and devSettingValue == false
+    if _IsModLoaded == nil then
+        _IsModLoaded = Mod.IsLoaded(Mod.GUIDS.EE_CORE)
+    end
+    if not _IsModLoaded then
+        return false
+    end
+    if _SimulateNoEESettingValue == nil then
+        _SimulateNoEESettingValue = Settings.GetSettingValue("Epip_Developer", "Developer_SimulateNoEE")
+    end
+    return _SimulateNoEESettingValue == false
 end
 
 ---Returns whether EE Origins is loaded.

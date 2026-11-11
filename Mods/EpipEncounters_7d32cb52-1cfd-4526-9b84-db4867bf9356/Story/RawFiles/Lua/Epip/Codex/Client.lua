@@ -129,8 +129,8 @@ end
 ---------------------------------------------
 
 -- Toggle the UI when the input action is used.
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action == Codex.InputActions.Open and Codex.UI then
+Client.Input.RegisterActionExecutedListener(Codex.InputActions.Open, function (_)
+    if Codex.UI then
         Codex.UI:ToggleVisibility()
     end
 end)

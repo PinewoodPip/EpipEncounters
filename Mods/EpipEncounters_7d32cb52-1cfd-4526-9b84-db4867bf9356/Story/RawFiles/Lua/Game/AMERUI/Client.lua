@@ -47,3 +47,11 @@ Net.RegisterListener("EE.AmerUILib.NetMessages.StateChanged", function(payload)
         end
     end
 end)
+
+-- Forward element wheel scroll events from the server.
+Net.RegisterListener(AMERUI.NETMSG_ELEMENTWHEEL_SCROLLED, function(payload)
+    AMERUI.Events.ElementWheelScrolled:Throw({
+        Item = payload:GetItem(),
+        Direction = payload.Direction,
+    })
+end)

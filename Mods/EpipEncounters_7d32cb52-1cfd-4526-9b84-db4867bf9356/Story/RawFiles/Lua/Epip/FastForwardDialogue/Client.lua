@@ -115,10 +115,8 @@ end
 ---------------------------------------------
 
 -- Fast-forward dialogue when the key is pressed in dialogue.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == FF.InputActions.FastForward.ID then
-        FF.TryPickAnswer()
-    end
+Input.RegisterActionExecutedListener(FF.InputActions.FastForward, function (_)
+    FF.TryPickAnswer()
 end, {EnabledFunctor = Client.IsInDialogue})
 
 -- Fast-forward dialogue while the key is held when new answers are added.

@@ -115,10 +115,8 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
 end)
 
 -- Toggle setting when using the input action.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == MinimapToggle.InputActions.Toggle.ID then
-        local setting = Settings.GetSetting("EpipEncounters", "Minimap")
-        Settings.SetValue("EpipEncounters", "Minimap", not setting:GetValue())
-        MinimapToggle._Update()
-    end
+Input.RegisterActionExecutedListener(MinimapToggle.InputActions.Toggle, function (_)
+    local setting = Settings.GetSetting("EpipEncounters", "Minimap")
+    Settings.SetValue("EpipEncounters", "Minimap", not setting:GetValue())
+    MinimapToggle._Update()
 end)

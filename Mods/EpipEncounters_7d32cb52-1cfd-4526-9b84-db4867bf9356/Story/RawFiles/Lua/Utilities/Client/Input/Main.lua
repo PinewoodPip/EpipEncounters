@@ -23,6 +23,8 @@ local Input = {
         Gui = {Name = "Windows", ShortName = "Win"},
     },
 
+    -- Mouse movement events.
+    ---@type set<InputRawType>
     MOTION_EVENTS = {
         motion = true,
         motion_xneg = true,
@@ -31,6 +33,22 @@ local Input = {
         motion_yneg = true,
     },
 
+    -- Controller stick movement events.
+    ---@type set<InputRawType>
+    CONTROLLER_MOTION_EVENTS = {
+        leftstick_xpos = true,
+        leftstick_xneg = true,
+        leftstick_ypos = true,
+        leftstick_yneg = true,
+
+        rightstick_xpos = true,
+        rightstick_xneg = true,
+        rightstick_ypos = true,
+        rightstick_yneg = true,
+    },
+
+    -- Maps raw input ID to movement axis.
+    ---@type table<InputRawType, "x"|"y">
     MOTION_AXIS = {
         motion_xneg = "x",
         motion_xpos = "x",
@@ -535,15 +553,15 @@ local Input = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        MouseMoved = {}, ---@type Event<InputLib_Event_MouseMoved>
-        KeyStateChanged = {Preventable = true}, ---@type PreventableEvent<InputLib_Event_KeyStateChanged>
-        KeyPressed = {}, ---@type Event<InputLib_Event_KeyPressed>
-        KeyReleased = {}, ---@type Event<InputLib_Event_KeyReleased>
+        MouseMoved = {}, ---@type Event<InputLib.Events.MouseMoved>
+        KeyStateChanged = {Preventable = true}, ---@type PreventableEvent<InputLib.Events.KeyStateChanged>
+        KeyPressed = {}, ---@type Event<InputLib.Events.KeyPressed>
+        KeyReleased = {}, ---@type Event<InputLib.Events.KeyReleased>
         MouseButtonPressed = {}, ---@type Event<InputLib_Event_MouseButtonPressed>
         StickMoved = {}, ---@type Event<InputLib.Events.StickMoved>
 
-        ActionExecuted = {}, ---@type Event<InputLib_Event_ActionExecuted>
-        ActionReleased = {}, ---@type Event<InputLib_Event_ActionExecuted>
+        ActionExecuted = {}, ---@type Event<InputLib.Events.ActionEvent>
+        ActionReleased = {}, ---@type Event<InputLib.Events.ActionEvent>
     },
     Hooks = {
         CanExecuteAction = {}, ---@type Event<InputLib_Hook_CanExecuteAction>  
@@ -665,17 +683,17 @@ end
 ---------------------------------------------
 
 ---Fired once per tick, since it relies on multiple raw input events firing.
----@class InputLib_Event_MouseMoved
+---@class InputLib.Events.MouseMoved
 ---@field Vector Vector2D Pixels moved.
 
----@class InputLib_Event_KeyStateChanged : PreventableEventParams
+---@class InputLib.Events.KeyStateChanged : PreventableEventParams
 ---@field InputID InputRawType
 ---@field State InputState
 
----@class InputLib_Event_KeyPressed
+---@class InputLib.Events.KeyPressed
 ---@field InputID InputRawType
 
----@class InputLib_Event_KeyReleased
+---@class InputLib.Events.KeyReleased
 ---@field InputID InputRawType
 
 ---@class InputLib_Event_MouseButtonPressed
@@ -936,6 +954,9 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Forward input events.
+local MOTION_EVENTS = Input.MOTION_EVENTS
+local CONTROLLER_MOTION_EVENTS = Input.CONTROLLER_MOTION_EVENTS
 Ext.Events.RawInput:Subscribe(function(e)
     local inputEventData = e.Input
     local id = tostring(inputEventData.Input.InputId)
@@ -947,10 +968,6 @@ Ext.Events.RawInput:Subscribe(function(e)
         Input.pressedKeys[id] = true
     else
         Input.pressedKeys[id] = nil
-    end
-
-    if not Input.MOTION_EVENTS[id] then
-        Input:Dump(e)
     end
 
     -- Track mouse movement
@@ -989,18 +1006,22 @@ Ext.Events.RawInput:Subscribe(function(e)
         end
     end
 
-    local event = {InputID = id, State = state,} ---@type InputLib_Event_KeyStateChanged
+    local event = {InputID = id, State = state,} ---@type InputLib.Events.KeyStateChanged
 
     Input.Events.KeyStateChanged:Throw(event)
 
-    if state == "Released" then
-        Input.Events.KeyReleased:Throw({
-            InputID = id,
-        })
-    else
-        Input.Events.KeyPressed:Throw({
-            InputID = id,
-        })
+    -- Mouse/stick movement does not trigger Key Pressed/Released
+    -- This also prevents them from needlessly triggering InputActions
+    if not MOTION_EVENTS[id] and not CONTROLLER_MOTION_EVENTS[id] then
+        if state == "Released" then
+            Input.Events.KeyReleased:Throw({
+                InputID = id,
+            })
+        else
+            Input.Events.KeyPressed:Throw({
+                InputID = id,
+            })
+        end
     end
 
     if event.Prevented then

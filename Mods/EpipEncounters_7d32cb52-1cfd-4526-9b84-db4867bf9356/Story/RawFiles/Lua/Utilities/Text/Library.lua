@@ -779,14 +779,21 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
     return template, newStrings, outdatedStrings
 end
 
+local _ChatLanguage = nil
+local _LanguageOverride = nil
 ---Returns the language the game is set to.
 ---@param useOverride boolean? Whether to consider the Epip language override setting. Defaults to `true`.
 ---@return string
 function Text.GetCurrentLanguage(useOverride)
-    local language = Ext.Utils.GetGlobalSwitches().ChatLanguage
-    local settingOverride = useOverride ~= false and IO.LoadFile("Epip/LanguageOverride.txt", "user", true) or ""
-    if settingOverride and settingOverride ~= "" then
-        language = settingOverride
+    if not _ChatLanguage then
+        _ChatLanguage = Ext.Utils.GetGlobalSwitches().ChatLanguage
+    end
+    local language = _ChatLanguage
+    if _LanguageOverride == nil then
+        _LanguageOverride = IO.LoadFile("Epip/LanguageOverride.txt", "user", true) or ""
+    end
+    if (useOverride == nil or useOverride) and _LanguageOverride ~= "" then
+        language = _LanguageOverride
     end
     return language
 end

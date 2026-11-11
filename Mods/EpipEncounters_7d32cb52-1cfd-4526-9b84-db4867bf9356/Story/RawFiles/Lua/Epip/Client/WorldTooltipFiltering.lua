@@ -79,13 +79,21 @@ end
 
 ---Returns whether a tooltip entry should be filtered. Checks the registered settings.
 ---@param entry WorldTooltipUI_Entry
+---@param enabledFilters table<Feature_WorldTooltipFiltering_Setting, boolean>? If unset or has missing keys, the setting values will be checked from SettingsLib.
+---@param entity (EclItem|EclCharacter)? If unset, will be fetched from the entry.
 ---@return boolean
-function Filtering.ShouldFilter(entry)
-    local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID))
+function Filtering.ShouldFilter(entry, enabledFilters, entity)
+    entity = entity or Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
     local shouldFilter = false
 
     for _,setting in ipairs(Filtering.SETTINGS) do
-        if not Filtering._IsSettingEnabled(setting) and setting.FilterPredicate then
+        local isFilterEnabled
+        if enabledFilters then
+            isFilterEnabled = Filtering._GetCachedFilterSettingValue(enabledFilters, setting)
+        else
+            isFilterEnabled = Filtering._IsSettingEnabled(setting)
+        end
+        if not isFilterEnabled and setting.FilterPredicate then
             shouldFilter = setting.FilterPredicate(entry, entity)
 
             -- Break if any setting deems this entry filterable.
@@ -98,28 +106,43 @@ function Filtering.ShouldFilter(entry)
     return shouldFilter
 end
 
+---Returns the cached value of a filter setting, or adds it to the cache if need be.
+---@param cache table<Feature_WorldTooltipFiltering_Setting, boolean>
+---@param setting Feature_WorldTooltipFiltering_Setting
+---@return boolean
+function Filtering._GetCachedFilterSettingValue(cache, setting)
+    if cache[setting] == nil then
+        cache[setting] = Filtering._IsSettingEnabled(setting)
+    end
+    return cache[setting]
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 WorldTooltip.Hooks.UpdateContent:Subscribe(function (ev)
-    local i = 1
-    while i <= #ev.Entries do
-        local entry = ev.Entries[i]
+    local filterSettingStates = {} ---@type table<Feature_WorldTooltipFiltering_Setting, boolean>
+    local filteredEntries = {} ---@type WorldTooltipUI_Entry[]
+    local filteredEntriesCount = 0
+    for _,entry in ipairs(ev.Entries) do
+        local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID)) ---@cast entity EclItem|EclCharacter
 
-        if Filtering.ShouldFilter(entry) then
-            table.remove(ev.Entries, i)
-        else
+        -- Only keep entries that were not filtered out
+        if not Filtering.ShouldFilter(entry, filterSettingStates, entity) then
+            filteredEntriesCount = filteredEntriesCount + 1
+            filteredEntries[filteredEntriesCount] = entry
+
+            -- Apply label edits
             for _,setting in ipairs(Filtering.SETTINGS) do
-                if Filtering._IsSettingEnabled(setting) and setting.GetLabel then
-                    local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(entry.ID))
-
+                local isFilterEnabled = Filtering._GetCachedFilterSettingValue(filterSettingStates, setting)
+                if isFilterEnabled and setting.GetLabel then
                     entry.Label = setting.GetLabel(entry, entity)
                 end
             end
-            i = i + 1
         end
     end
+    ev.Entries = filteredEntries
 end)
 
 ---------------------------------------------

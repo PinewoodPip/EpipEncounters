@@ -24,11 +24,10 @@ end
 ---------------------------------------------
 
 -- Listen for wheels being scrolled.
-Game.AMERUI:RegisterListener("ElementWheelScrolled", function(itemGUID, direction)
-    local item = Item.Get(itemGUID)
-    local templateId = item.RootTemplate.Id
+Game.AMERUI.Events.ElementWheelScrolled:Subscribe(function(ev)
+    local templateId = ev.Item.RootTemplate.Id
 
     if templateId == Ascension.ELEMENT_TEMPLATES.CLUSTER_WHEEL_LEFT or templateId == Ascension.ELEMENT_TEMPLATES.CLUSTER_WHEEL_RIGHT then
-        Ascension:FireEvent("ClusterWheelScrolled", direction)
+        Ascension:FireEvent("ClusterWheelScrolled", ev.Direction)
     end
 end)

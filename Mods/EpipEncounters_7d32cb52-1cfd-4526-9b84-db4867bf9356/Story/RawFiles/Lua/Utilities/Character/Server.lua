@@ -2,6 +2,8 @@
 ---@class CharacterLib
 local Character = Character
 
+local _ClientStatusAppliedEventEnabled = false
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -42,26 +44,30 @@ end
 ---------------------------------------------
 
 -- Forward status application events.
+local StatusAppliedEvent = Character.Events.StatusApplied
 Ext.Events.BeforeStatusApply:Subscribe(function (ev)
+    if StatusAppliedEvent.First == nil and not _ClientStatusAppliedEventEnabled then return end
     local status = ev.Status ---@type EsvStatus
     local owner = ev.Owner ---@type EsvCharacter|EsvItem
     local ownerGUID = owner.MyGuid
 
-    Character.Events.StatusApplied:Throw({
+    StatusAppliedEvent:Throw({
         Status = status,
         SourceHandle = status.OwnerHandle,
         Victim = owner,
     })
 
-    local ownerNetID = owner.NetID
-    local statusNetID = status.NetID
-    Timer.Start(0.2, function (_) -- Needs a delay. This message would otherwise arrive before the object is created on the client. TODO seek improvements
-        if Osi.ObjectExists(ownerGUID) == 0 then return end -- Do not send message if the entity died in the meantime.
-        Net.Broadcast("EPIP_CharacterLib_StatusApplied", {
-            OwnerNetID = ownerNetID,
-            StatusNetID = statusNetID,
-        })
-    end)
+    if _ClientStatusAppliedEventEnabled then
+        local ownerNetID = owner.NetID
+        local statusNetID = status.NetID
+        Timer.Start(0.2, function (_) -- Needs a delay. This message would otherwise arrive before the object is created on the client. TODO seek improvements
+            if Osi.ObjectExists(ownerGUID) == 0 then return end -- Do not send message if the entity died in the meantime.
+            Net.Broadcast("EPIP_CharacterLib_StatusApplied", {
+                OwnerNetID = ownerNetID,
+                StatusNetID = statusNetID,
+            })
+        end)
+    end
 end, {Priority = -999999999})
 
 -- Forward item equipped events.
@@ -82,4 +88,10 @@ Osiris.RegisterSymbolListener("CharacterDied", 1, "after", function (charGUID)
     Net.Broadcast(Character.NETMSG_CHARACTER_DIED, {
         CharacterNetID = Character.Get(charGUID).NetID,
     })
+end)
+
+-- Enable forwarding StatusApplied events to client when requested.
+-- These are disabled by default to avoid unnecessary NetMsg overhead.
+Net.RegisterListener(Character._NETMSG_ENABLED_STATUS_EVENTS, function (_)
+    _ClientStatusAppliedEventEnabled = true
 end)

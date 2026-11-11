@@ -179,8 +179,6 @@ end})
 
 -- Toggle the UI when the input action is executed.
 -- TODO move
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action:GetID() == InputActions.ToggleUI:GetID() then
-        SurfacePainter.UI:ToggleVisibility()
-    end
+Input.RegisterActionExecutedListener(InputActions.ToggleUI, function (_)
+    SurfacePainter.UI:ToggleVisibility()
 end)
