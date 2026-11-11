@@ -27,10 +27,21 @@ local Filtering = {
            Text = "If enabled, light items such as torches, candles and braziers will show world tooltips.",
            ContextDescription = "Setting tooltip",
         },
+        Setting_HighlightUnlootedContainers_Name = {
+            Handle = "h30de9767g5383g4b75g979bg01c9c5bf8326",
+            Text = "Highlight unlooted containers/corpses",
+            ContextDescription = [[World tooltips setting name]],
+        },
+        Setting_HighlightUnlootedContainers_Description = {
+            Handle = "hbaa04557g2699g4e7bgb81dge499656fef59",
+            Text = "If enabled, containers and corpses that have not yet been looted will show an asterisk in their world tooltips.",
+            ContextDescription = [[World tooltips setting name for "Highlight unlooted containers/corpses"]],
+        },
     },
     Settings = {},
 }
 Epip.RegisterFeature("WorldTooltipFiltering", Filtering)
+local TSK = Filtering.TranslatedStrings
 
 ---------------------------------------------
 -- CLASSES
@@ -49,8 +60,14 @@ Epip.RegisterFeature("WorldTooltipFiltering", Filtering)
 Filtering.Settings.ShowLights = Filtering:RegisterSetting("ShowLights", {
     ID = "ShowLights",
     Type = "Boolean",
-    NameHandle = Filtering.TranslatedStrings.Setting_ShowLights_Name,
-    DescriptionHandle = Filtering.TranslatedStrings.Setting_ShowLights_Description,
+    NameHandle = TSK.Setting_ShowLights_Name,
+    DescriptionHandle = TSK.Setting_ShowLights_Description,
+    DefaultValue = false,
+})
+Filtering.Settings.HighlightUnlootedContainers = Filtering:RegisterSetting("HighlightUnlootedContainers", {
+    Type = "Boolean",
+    Name = TSK.Setting_HighlightUnlootedContainers_Name,
+    Description = TSK.Setting_HighlightUnlootedContainers_Description,
     DefaultValue = false,
 })
 
@@ -183,6 +200,16 @@ local function EmphasizeLabel(entry, entity, isItem, settingID)
     return label
 end
 
+---Appends an asterisk to an entry label, with a distinctive color.
+---@param entry WorldTooltipUI_Entry
+---@return string
+local function AppendAsterisk(entry)
+    -- Append a colored asterisk to the tooltip, ignoring other color formatting to make it stand out.
+    local pattern = [[<font color="?'?#?(%x%x%x%x%x%x)"?'?>(.+)</font>]]
+    local label, _ = entry.Label:gsub(pattern, [[<font color="#%1">%2</font>]] .. Text.Format("*", {Color = Color.LARIAN.GOLD}))
+    return label
+end
+
 -- Register default settings.
 ---@type Feature_WorldTooltipFiltering_Setting[]
 local settings = {
@@ -286,6 +313,21 @@ local settings = {
             end
 
             return label
+        end
+    },
+    {
+        SettingID = Filtering.Settings.HighlightUnlootedContainers.ID,
+        ModTableID = Filtering.Settings.HighlightUnlootedContainers.ModTable,
+        GetLabel = function (entry, entity)
+            local isHighlighted = false
+            if Entity.IsCharacter(entity) then
+                local char = entity ---@type EclCharacter
+                isHighlighted = not char.HasInventory -- This is actually the "has been looted" flag.
+            elseif Entity.IsItem(entity) then
+                local item = entity ---@cast entity EclItem
+                isHighlighted = Item.IsContainer(item) and not item.WasOpened
+            end
+            return isHighlighted and AppendAsterisk(entry) or entry.Label
         end
     },
 }

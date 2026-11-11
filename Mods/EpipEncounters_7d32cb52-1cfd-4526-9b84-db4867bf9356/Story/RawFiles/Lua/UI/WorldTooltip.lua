@@ -11,6 +11,8 @@ local WorldTooltip = {
     _IgnoreNextClick = false,
     _LastTooltipClickWasPrevented = false,
 
+    ILLEGAL_COLOR = "CD1F1F", -- Tooltip color used for items that have illegal interactions.
+
     FLASH_ENTRY_TEMPLATE = {
         "ID",
         "X",

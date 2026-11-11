@@ -551,6 +551,7 @@ local tabs = {
             "WorldTooltip_HighlightConsumables",
             "WorldTooltip_HighlightEquipment",
             "WorldTooltip_EmptyContainers",
+            {Module = "EpipEncounters_WorldTooltipFiltering", ID = "HighlightUnlootedContainers"},
             "WorldTooltip_ShowSittableAndLadders",
             "WorldTooltip_ShowDoors",
             {Module = "EpipEncounters_WorldTooltipFiltering", ID = "ShowLights"},
