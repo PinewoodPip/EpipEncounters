@@ -10,6 +10,7 @@ local Overlay = Generic.Create("Features.ScrollablePlayerInfo")
 Overlay.SCROLLBAR_HEIGHT = 900 -- In flash units.
 Overlay.TOP_MARGIN = 15
 Overlay.SCROLLBAR_SENSITIVITY = 1.1 -- Multiplier for scroll amount when dragging the handle.
+Overlay.MIN_PARTY_MEMBERS = 5 -- Minimum amount of parties members for the UI to appear.
 Overlay._IsUsingScrollbar = false
 
 ---Shows the scrollbar overlay.
@@ -33,7 +34,8 @@ end
 ---Updates the visibility of the overlay based on mouse position.
 function Overlay._UpdateVisibility()
     local isOverPortraits = Overlay._IsUsingScrollbar or Scrolling.IsMouseWithinScrollArea()
-    if isOverPortraits then
+    local isVisible = isOverPortraits and #Character.GetPartyMembers(Client.GetCharacter()) >= Overlay.MIN_PARTY_MEMBERS -- Only show the UI in large parties.
+    if isVisible then
         Overlay:SetPositionRelativeToViewport("topleft", "topleft") -- For some reason, if this is done only on Setup(), then the position will gain a horizontal margin upon doing a Lua reset
         Overlay:Move(Vector.Create(0, Overlay.TOP_MARGIN * Overlay:GetScaleMultiplier()))
         Overlay:TryShow()
