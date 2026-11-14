@@ -1,4 +1,5 @@
 
+local GetItem = Ext.Entity.GetItem
 local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class ItemLib : Library
@@ -868,8 +869,7 @@ function Item.Get(identifier, isFlashHandle)
     if isFlashHandle then
         identifier = Ext.UI.DoubleToHandle(identifier)
     end
-
-    return Ext.Entity.GetItem(identifier)
+    return GetItem(identifier)
 end
 
 --- Returns true if the item is an armor piece or a weapon.

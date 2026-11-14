@@ -1,5 +1,7 @@
 
 local DeathType = Ext.Enums.DeathType
+local UIDoubleToHandle = Ext.IsClient() and Ext.UI.DoubleToHandle or function() end
+local GetCharacter = Ext.Entity.GetCharacter
 local V = Vector.Create
 
 ---@class CharacterLib : Library
@@ -576,10 +578,9 @@ end
 ---@return Character
 function Character.Get(identifier, isFlashHandle)
     if isFlashHandle then
-        identifier = Ext.UI.DoubleToHandle(identifier)
+        identifier = UIDoubleToHandle(identifier)
     end
-
-    return Ext.Entity.GetCharacter(identifier)
+    return GetCharacter(identifier)
 end
 
 ---@param char Character
