@@ -3,6 +3,9 @@
 -- Based on v56's event system.
 ---------------------------------------------
 
+local xpcall = xpcall
+local debugTraceback = debug.traceback
+
 ---@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:(fun(node:table):boolean)?))}
 ---@field Preventable false
 ---@field Name string
@@ -241,7 +244,7 @@ function SubscribableEvent:Throw(event)
 		end
 
 		if cur.EnabledFunctor == nil or cur.EnabledFunctor() then
-			local ok, result = xpcall(cur.Handler, debug.traceback, event)
+			local ok, result = xpcall(cur.Handler, debugTraceback, event)
 			if not ok then
 				Ext.PrintError("Error while dispatching event " .. self.Name .. ": ", result)
 			end

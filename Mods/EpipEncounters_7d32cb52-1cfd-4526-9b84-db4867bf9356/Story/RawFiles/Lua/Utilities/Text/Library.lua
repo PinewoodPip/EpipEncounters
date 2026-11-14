@@ -1,5 +1,7 @@
 
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
+local getmetatable, setmetatable = getmetatable, setmetatable
+local type = type
 
 ---@class TextLib : Library
 Text = {
