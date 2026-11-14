@@ -1,6 +1,7 @@
 
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 local EE_CORE_GUID = "63bb9b65-2964-4c10-be5b-55a63ec02fa0"
+local _IsServer = Ext.IsServer()
 
 ---@enum ScriptLoadRequest.GameModeMask
 GAMEMODE_MASK = {
@@ -61,7 +62,7 @@ function RequestScriptLoad(script)
     if type(script) == "table" and CanLoadRequest(script) then
         if script.ScriptSet then
             local contextSpecificScript = "/Client.lua"
-            if Ext.IsServer() then
+            if _IsServer then
                 contextSpecificScript = "/Server.lua"
             end
 

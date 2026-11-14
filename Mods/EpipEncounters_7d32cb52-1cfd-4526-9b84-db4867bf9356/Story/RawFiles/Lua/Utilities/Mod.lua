@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class ModLib : Library
 Mod = {
     GUIDS = {
@@ -148,5 +150,5 @@ end
 ---Returns the context the caller script is running in.
 ---@return "Client"|"Server"
 function Mod.GetCurrentContext()
-    return Ext.IsClient() and "Client" or "Server"
+    return _IsClient and "Client" or "Server"
 end

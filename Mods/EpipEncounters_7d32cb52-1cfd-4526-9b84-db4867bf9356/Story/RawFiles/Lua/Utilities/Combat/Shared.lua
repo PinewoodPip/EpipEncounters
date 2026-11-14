@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class CombatLib : Library
 Combat = {}
 Epip.InitializeLibrary("Combat", Combat)
@@ -16,7 +18,7 @@ Epip.InitializeLibrary("Combat", Combat)
 ---@return EclTurnManager|EsvTurnManager
 function Combat.GetTurnManager()
     -- Yet another unfortunate inconsistency.
-    if Ext.IsClient() then
+    if _IsClient then
         return Ext.Entity.GetTurnManager()
     else
         return Ext.Combat.GetTurnManager()
@@ -40,7 +42,7 @@ function Combat.GetActiveCombatant(combatID)
     end
     local currentTeam, combatant
 
-    if Ext.IsClient() then
+    if _IsClient then
         combatant = Combat.GetTurnOrder(combatID).CurrentRound.Participants[1]
     else
         currentTeam = combat:GetCurrentTurnOrder()[1]
@@ -83,7 +85,7 @@ end
 ---@return CombatLib_CombatCompatibleEntity[]
 function Combat.GetParticipants(combat)
     local entities = {} ---@type CombatLib_CombatCompatibleEntity[]
-    if Ext.IsClient() then
+    if _IsClient then
         ---@cast combat EclTurnManagerCombat
         local teams = combat.Teams
         for _,handle in pairs(teams) do

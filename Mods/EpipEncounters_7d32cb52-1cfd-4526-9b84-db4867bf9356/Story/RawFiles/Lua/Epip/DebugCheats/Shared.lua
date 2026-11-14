@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class Feature_DebugCheats : Feature
 local DebugCheats = {
     _Actions = {}, ---@type table<string, Feature_DebugCheats_Action>
@@ -115,7 +117,7 @@ function DebugCheats.ExecuteAction(actionID, contextData)
         DebugCheats._ThrowExecuteActionEvent(action, contextData)
     
         -- Forward to other context
-        if Ext.IsClient() then
+        if _IsClient then
             Net.PostToServer(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)
         else
             Net.Broadcast(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)

@@ -379,10 +379,8 @@ Ext.Events.SessionLoaded:Subscribe(function (_)
     stat2.DisableInteractions = "No"
     stat2.RetainSkills = Text.Join(racialSkills, ";")
 
-    if Ext.IsServer() then -- TODO redundant?
-        Ext.Stats.Sync("PIP_Vanity_Refresh", false)
-        Ext.Stats.Sync("PIP_Vanity_Refresh_Alt", false)
-    end
+    Ext.Stats.Sync("PIP_Vanity_Refresh", false)
+    Ext.Stats.Sync("PIP_Vanity_Refresh_Alt", false)
 end)
 
 -- Clear transmog when appearance is reset.

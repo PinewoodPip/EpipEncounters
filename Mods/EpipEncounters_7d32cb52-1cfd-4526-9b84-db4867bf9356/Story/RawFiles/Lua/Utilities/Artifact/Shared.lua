@@ -1,5 +1,6 @@
 
 local Set = DataStructures.Get("DataStructures_Set")
+local _IsClient = Ext.IsClient()
 
 ---@class ArtifactLib : Feature
 Artifact = {
@@ -1059,7 +1060,7 @@ end
 ---Returns whether the party owns an artifact.
 ---@param id string
 function Artifact.IsOwnedByParty(id)
-    local sourceChar = Ext.IsClient() and Client.GetCharacter() or Character.Get(Osiris.CharacterGetHostCharacter())
+    local sourceChar = _IsClient and Client.GetCharacter() or Character.Get(Osiris.CharacterGetHostCharacter())
     local members = Character.GetPartyMembers(sourceChar)
     local owned = false
 

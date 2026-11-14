@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Actions = Epip.GetFeature("Feature_HotbarActions")
+local _IsServer = Ext.IsServer()
 
 ---@type Feature
 local Mirror = {
@@ -32,7 +33,7 @@ if Mirror:IsEnabled() then
     })
 
     -- Listen for the action being used
-    if Ext.IsServer() then
+    if _IsServer then
         Actions.Events.ActionUsed:Subscribe(function (ev)
             if ev.Action.ID == Mirror.ACTION_ID then
                 Osiris.PROC_PIP_Hotkey_Respec(ev.Character)

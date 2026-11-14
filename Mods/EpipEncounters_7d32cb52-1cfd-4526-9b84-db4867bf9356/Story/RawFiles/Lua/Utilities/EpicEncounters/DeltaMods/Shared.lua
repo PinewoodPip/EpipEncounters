@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class EpicEncounters_DeltaModsLib : Library
 local DeltaMods = {
     MODVAR_DELTAMODS_DATA = "DeltaModsData",
@@ -127,7 +129,7 @@ function DeltaMods.GetGroupDefinition(type, slot, subType, name)
     end
 
     -- Search definitions in modvars
-    if def == nil and Ext.IsClient() then
+    if def == nil and _IsClient then
         local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_DELTAMODS_DATA)
 
         for _,definition in ipairs(vars) do

@@ -1,6 +1,8 @@
 
 local DeathType = Ext.Enums.DeathType
-local UIDoubleToHandle = Ext.IsClient() and Ext.UI.DoubleToHandle or function() end
+local _IsClient = Ext.IsClient()
+local _IsServer = Ext.IsServer()
+local UIDoubleToHandle = _IsClient and Ext.UI.DoubleToHandle or function() end
 local GetCharacter = Ext.Entity.GetCharacter
 local V = Vector.Create
 
@@ -334,7 +336,7 @@ end
 function Character.GetDisplayName(char)
     local name = char.DisplayName -- Fallback english name.
 
-    if Ext.IsClient() then
+    if _IsClient then
         ---@cast char EclCharacter
         if char.PlayerCustomData then
             local translatedName = char.PlayerCustomData.NameTranslated.Handle.ReferenceString
@@ -408,7 +410,7 @@ function Character.GetOwner(char)
 
     -- Unfortunate inconsistency.
     if char.HasOwner then
-        if Ext.IsClient() then
+        if _IsClient then
             ownerHandle = char.OwnerCharacterHandle
         else
             ownerHandle = char.OwnerHandle
@@ -452,7 +454,7 @@ function Character.GetEquippedItems(char)
     for _,slot in pairs(Character.EQUIPMENT_SLOTS) do
         local item
 
-        if Ext.IsClient() then
+        if _IsClient then
             item = char:GetItemBySlot(slot)
             if item then
                 item = Item.Get(item)
@@ -528,7 +530,7 @@ end
 ---@return integer -- In "grams".
 function Character.GetCarryWeight(char)
     local weight = 0
-    if Ext.IsServer() then
+    if _IsServer then
         weight = Ext.Entity.GetInventory(char.InventoryHandle).CachedWeight
     else
         -- The CachedWeight field is unfortunately unavailable.
@@ -980,7 +982,7 @@ end
 ---@param char Character
 ---@return EocSkillBarItem[]
 function Character.GetSkillBar(char)
-    return Ext.IsServer() and char.PlayerData.SkillBar or char.PlayerData.SkillBarItems
+    return _IsServer and char.PlayerData.SkillBar or char.PlayerData.SkillBarItems
 end
 
 ---Clears a skillbar slot.
@@ -1106,7 +1108,7 @@ end
 function Character.GetSkillState(char)
     local state
 
-    if Ext.IsClient() then
+    if _IsClient then
         state = char.SkillManager.CurrentSkill
     else
         local layers = char.ActionMachine.Layers
@@ -1186,7 +1188,7 @@ function Character._ThrowItemEquippedEvent(character, item)
 
     -- Prevent firing the event if the item was destroyed
     if item then
-        if Ext.IsServer() then
+        if _IsServer then
             equippedSlot = item.Slot
         else
             equippedSlot = item.CurrentSlot

@@ -5,6 +5,7 @@
 ---------------------------------------------
 
 local CommonStrings = Text.CommonStrings
+local _IsClient = Ext.IsClient()
 
 ---@class Feature_HotbarActions : Feature
 local Actions = {
@@ -99,7 +100,7 @@ function Actions.RegisterAction(action)
     Actions._ActionsByID[action.ID] = action
 
     -- Register the action into the Hotbar API
-    if Ext.IsClient() then
+    if _IsClient then
         local Hotbar = Client.UI.Hotbar
 
         if not action.RequiresEE or EpicEncounters.IsEnabled() then

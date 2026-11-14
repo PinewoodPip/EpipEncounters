@@ -4,6 +4,9 @@
 -- Intended usage is to quickly run test/debug scripts without including them in any mod directory.
 ---------------------------------------------
 
+local _IsClient = Ext.IsClient()
+local _IsServer = Ext.IsServer()
+
 ---@class Features.PersonalScripts : Feature
 local PersonalScripts = {
     DEFINITION_PATH = "Epip/CustomScripts.json",
@@ -139,7 +142,7 @@ end
 function PersonalScripts.CanLoad(script)
     local canLoad = script.Context == "Shared"
     if not canLoad then
-        canLoad = (Ext.IsClient() and script.Context == "Client") or (Ext.IsServer() and script.Context == "Server")
+        canLoad = (_IsClient and script.Context == "Client") or (_IsServer and script.Context == "Server")
     end
     canLoad = canLoad and script.Enabled
     return canLoad
@@ -177,7 +180,7 @@ function PersonalScripts._LoadScripts()
                 if not success then
                     PersonalScripts:__LogError("Failed to load script", path, ":\n", err)
                 else
-                    PersonalScripts:__Log(Ext.IsServer() and "Server" or "Client", "Loaded script", path) -- Intentionally not a debug log, so the user can easily tell the scripts have loaded.
+                    PersonalScripts:__Log(_IsServer and "Server" or "Client", "Loaded script", path) -- Intentionally not a debug log, so the user can easily tell the scripts have loaded.
                 end
             else
                 PersonalScripts:__LogError("Script doesn't exist", path)

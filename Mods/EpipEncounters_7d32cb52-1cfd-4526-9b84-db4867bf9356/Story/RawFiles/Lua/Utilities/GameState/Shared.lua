@@ -1,6 +1,8 @@
 
 local Set = DataStructures.Get("DataStructures_Set")
-local GetGameState = Ext.IsClient() and Ext.Client.GetGameState or Ext.Server.GetGameState
+local _IsClient = Ext.IsClient()
+local _IsServer = Ext.IsServer()
+local GetGameState = _IsClient and Ext.Client.GetGameState or Ext.Server.GetGameState
 local MonotonicTime = Ext.Utils.MonotonicTime
 local ThrowEvent = SubscribableEvent.Throw
 
@@ -204,11 +206,11 @@ Ext.Events.GameStateChanged:Subscribe(function(ev)
         GameState.Events.GamePaused:Throw()
     elseif to == GameState.CLIENT_STATES.RUNNING and from == GameState.CLIENT_STATES.PAUSED then
         GameState.Events.GameUnpaused:Throw()
-    elseif from == GameState.CLIENT_STATES.PREPARE_RUNNING and to == GameState.CLIENT_STATES.RUNNING or (Ext.IsServer() and from == "Sync" and to == "Running") then
+    elseif from == GameState.CLIENT_STATES.PREPARE_RUNNING and to == GameState.CLIENT_STATES.RUNNING or (_IsServer and from == "Sync" and to == "Running") then
         GameState.Events.GameReady:Throw()
 
         -- Throw ClientReady event, and notify the server.
-        if Ext.IsClient() then
+        if _IsClient then
             GameState._ThrowClientReadyEvent()
         end
     end

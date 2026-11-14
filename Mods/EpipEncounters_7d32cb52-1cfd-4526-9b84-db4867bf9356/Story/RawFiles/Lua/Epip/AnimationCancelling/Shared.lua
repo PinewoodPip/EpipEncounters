@@ -1,5 +1,6 @@
 
 local Set = DataStructures.Get("DataStructures_Set")
+local _IsServer = Ext.IsServer()
 
 ---@class Feature_AnimationCancelling : Feature
 local AnimCancel = {
@@ -147,7 +148,7 @@ function AnimCancel.GetDelay(char, state)
     local delay = AnimCancel.DEFAULT_DELAY
     local skillID = type(state) == "string" and state or nil
     if type(state) ~= "string" and state.Type == "UseSkill" then
-        if Ext.IsServer() then
+        if _IsServer then
             ---@cast state EsvASUseSkill
             skillID = Stats.RemoveLevelSuffix(state.Skill.SkillId)
         else

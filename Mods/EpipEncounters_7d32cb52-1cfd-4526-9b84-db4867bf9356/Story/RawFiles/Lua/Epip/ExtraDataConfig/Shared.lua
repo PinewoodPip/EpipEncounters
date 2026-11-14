@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class Feature_ExtraDataConfig : Feature
 local DataConfig = {
     ModifiedEntries = {}, ---@type table<string, number>
@@ -40,7 +42,7 @@ function DataConfig.SetValue(key, value, save)
 
         -- Save settings.
         if save then
-            if Ext.IsClient() then
+            if _IsClient then
                 Settings.SetValue(DataConfig.SETTINGS_MODULE_ID, key, value)
             else
                 DataConfig.SaveSettings()

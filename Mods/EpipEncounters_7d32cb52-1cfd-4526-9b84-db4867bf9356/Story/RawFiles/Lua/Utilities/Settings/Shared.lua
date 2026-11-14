@@ -4,6 +4,8 @@
 -- Successor to the previous system bound to OptionsSettings.
 ---------------------------------------------
 
+local _IsClient = Ext.IsClient()
+
 ---@class SettingsLib : Library
 Settings = {
     Modules = {}, ---@type table<string, SettingsLib_Module>
@@ -80,7 +82,7 @@ end
 function _Setting:IsInValidContext()
     local isValid
 
-    if Ext.IsClient() then
+    if _IsClient then
         isValid = self.Context == "Client" or (self.Context == "Host" and Client.IsHost())
     else
         isValid = self.Context == "Server"
@@ -277,7 +279,7 @@ function Settings.RegisterSetting(data)
 
     -- Pre-load saved client setting values.
     -- For server, we must wait for PersistentVars to be available.
-    if not Settings.Modules[data.ModTable] and Ext.IsClient() then
+    if not Settings.Modules[data.ModTable] and _IsClient then
         Settings.Load(data.ModTable)
     end
 

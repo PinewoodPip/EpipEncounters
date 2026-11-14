@@ -1,5 +1,6 @@
 
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
+local _IsServer = Ext.IsServer()
 
 ---@class Feature_DatabaseSync : Feature
 local DBSync = {
@@ -46,7 +47,7 @@ function DBSync.RegisterDatabase(name, arity, fieldNames)
     if DBSync._Definitions[name][arity] then
         DBSync:DebugLog("DB already registered", name, arity)
     else
-        if Ext.IsServer() then
+        if _IsServer then
             Osiris.RegisterSymbolListener(name, arity, "after", function (_)
                 DBSync._UpdateDatabaseVariables(name, arity)
             end)

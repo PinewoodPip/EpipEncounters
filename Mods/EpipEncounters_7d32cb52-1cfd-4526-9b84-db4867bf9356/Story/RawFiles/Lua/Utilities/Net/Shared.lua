@@ -1,4 +1,5 @@
 
+local _IsClient = Ext.IsClient()
 
 ---@class NetLib : Library
 Net = {
@@ -129,7 +130,7 @@ end
 ---@param message T?
 function Net.PostToUser(user, channel, message)
     if GetExtType(user) ~= nil then user = user.ReservedUserID end
-    if Ext.IsClient() and user.ReservedForPlayerId < 0 then -- Use reserved user ID if the character is assigned to a player but not currently controlled.
+    if _IsClient and user.ReservedForPlayerId < 0 then -- Use reserved user ID if the character is assigned to a player but not currently controlled.
         user = user.ReservedForPlayerId
     end
 
@@ -144,7 +145,7 @@ function Net.PostToOwner(char, channel, message)
     local owner = char
     if char.HasOwner then
         -- Mildly annoying inconsistency with field names.
-        if Ext.IsClient() then
+        if _IsClient then
             owner = Character.Get(char.OwnerCharacterHandle)
         else
             owner = Character.Get(char.OwnerHandle)

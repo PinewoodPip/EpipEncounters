@@ -1,4 +1,6 @@
 
+local _IsServer = Ext.IsServer()
+
 ---@class VanityShapeshift
 local Shapeshift = {
     Tab = nil,
@@ -46,7 +48,7 @@ function Shapeshift.RegisterForm(form)
     stat.PolymorphResult = form.Template
     stat.DisableInteractions = "No"
 
-    if Ext.IsServer() then
+    if _IsServer then
         Ext.Stats.Sync(statusName, true)
     end
 

@@ -3,6 +3,9 @@
 -- Base table for features and libraries.
 ---------------------------------------------
 
+local _IsClient = Ext.IsClient()
+local _IsServer = Ext.IsServer()
+
 ---@class Feature : Library
 ---@field _EnabledFunctor (fun():boolean)?
 ---@field Disabled boolean
@@ -47,7 +50,7 @@ Feature._AllGameStatesBitfield = Feature.GAME_STATES.RUNNING_SESSION * 2 - 1
 ---@return Feature
 function Feature.Create(modTable, id, feature)
     feature.Settings = feature.Settings or {}
-    if Ext.IsClient() then
+    if _IsClient then
         feature.InputActions = feature.InputActions or {}
     end
 
@@ -63,7 +66,7 @@ function Feature.Create(modTable, id, feature)
     end
 
     -- Initialize InputLib actions
-    if Ext.IsClient() then
+    if _IsClient then
         for actionID,actionDef in pairs(feature.InputActions) do
             feature:RegisterInputAction(actionID, actionDef)
         end
@@ -195,7 +198,7 @@ function Feature:GetSettingsModuleID()
 end
 
 function Feature:SaveSettings()
-    if Ext.IsServer() then
+    if _IsServer then
         Feature:__Error("SaveSettings", "SaveSettings() not implemented on server")
     else
         Settings.Save(self:GetNamespace())
@@ -211,7 +214,7 @@ end
 ---@param action InputLib_Action
 ---@return InputLib_Action
 function Feature:RegisterInputAction(id, action)
-    if not Ext.IsClient() then
+    if not _IsClient then
         self:__Error("RegisterInputAction", "Called outside of client context")
     end
     local prefixedID = self:GetNamespace() .. "_" .. id

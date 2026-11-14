@@ -1,6 +1,8 @@
 
 local GetItem = Ext.Entity.GetItem
 local Set = DataStructures.Get("DataStructures_Set")
+local _IsClient = Ext.IsClient()
+local _IsServer = Ext.IsServer()
 
 ---@class ItemLib : Library
 Item = {
@@ -347,9 +349,9 @@ function Item.GetDisplayName(item)
 
     if item.Known or templateDisplayName == "" then
         local customDisplayName = item.CustomDisplayName
-        if Ext.IsServer() and customDisplayName ~= "" then
+        if _IsServer and customDisplayName ~= "" then
             name = item.CustomDisplayName
-        elseif Ext.IsClient() and customDisplayName and customDisplayName.Handle.ReferenceString ~= "" then
+        elseif _IsClient and customDisplayName and customDisplayName.Handle.ReferenceString ~= "" then
             name = Text.GetTranslatedString(customDisplayName.Handle.Handle) -- Not sure if translating these is actually ever necessary.
         else
             if templateDisplayName ~= "" then -- A bit confusing considering the first if check, but not unused.
@@ -401,7 +403,7 @@ function Item.GetIcon(item)
             icon = "Item_LOOT_Gold_Small_A"
         end
     else
-        if Ext.IsClient() and item.Icon ~= "" then -- GB5 Icon override
+        if _IsClient and item.Icon ~= "" then -- GB5 Icon override
             icon = item.Icon
         elseif item.Stats then
             local statObject = Ext.Stats.Get(item.Stats.Name)
@@ -913,7 +915,7 @@ end
 function Item.GetEquippedItem(char, slot)
     local item
 
-    if Ext.IsClient() then
+    if _IsClient then
         item = char:GetItemBySlot(slot)
     else
         item = Osiris.CharacterGetEquippedItem(char, slot)
@@ -1012,7 +1014,7 @@ function Item.IsEquipped(char, item)
     if item == nil then -- Item-only overload.
         item = char ---@type Item
 
-        local inventoryHandle = Ext.IsClient() and item.InventoryParentHandle or item.ParentInventoryHandle
+        local inventoryHandle = _IsClient and item.InventoryParentHandle or item.ParentInventoryHandle
         local inventory = Ext.Entity.GetInventory(inventoryHandle) ---@type EclInventory
 
         if inventory then
@@ -1041,7 +1043,7 @@ function Item.GetEquippedSlot(item, char)
     if not char then return nil end
     local isEquipped = false
 
-    if Ext.IsClient() then
+    if _IsClient then
         isEquipped = char:GetItemBySlot(slot) == item.MyGuid
     else
         isEquipped = Osi.CharacterGetEquippedItem(char.MyGuid, slot) ~= NULLGUID
@@ -1252,7 +1254,7 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsLocked(item)
-    local key = Ext.IsClient() and item.KeyName or item.Key -- This field is cleared when the item is unlocked.
+    local key = _IsClient and item.KeyName or item.Key -- This field is cleared when the item is unlocked.
     return key ~= ""
 end
 

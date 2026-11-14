@@ -1,6 +1,7 @@
 
 local Minimap = Client.UI.Minimap
 local WorldTooltip = Client.UI.WorldTooltip
+local _IsServer = Ext.IsServer()
 
 ---@class Feature_AnimationCancelling
 local AnimCancel = Epip.GetFeature("Feature_AnimationCancelling")
@@ -53,7 +54,7 @@ function AnimCancel.IsEligible(char, state)
     local eligible
     local skillID = type(state) == "string" and state or nil
     if type(state) ~= "string" and state.Type == "UseSkill" then -- State overload.
-        if Ext.IsServer() then
+        if _IsServer then
             ---@cast state EsvASUseSkill
             skillID = Stats.RemoveLevelSuffix(state.Skill.SkillId)
         else

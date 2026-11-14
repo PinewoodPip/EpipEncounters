@@ -5,6 +5,8 @@
 ---------------------------------------------
 
 local Print = Ext.Utils.Print
+local _IsClient = Ext.IsClient()
+local _IsServer = Ext.IsServer()
 
 ---@class Library : Class
 ---@field UserVariables table<string, UserVarsLib_UserVar> Initializable.
@@ -77,7 +79,7 @@ function Library.Create(modTable, id, data)
         ---@cast opts Library.Event
         if opts.Legacy == false or data.USE_LEGACY_EVENTS == false then
             -- Check if context is invalid
-            if opts.Context and ((opts.Context == "Client" and Ext.IsServer()) or (opts.Context == "Server" and Ext.IsClient())) then
+            if opts.Context and ((opts.Context == "Client" and _IsServer) or (opts.Context == "Server" and _IsClient)) then
                 data.Events[ev] = CreateInvalidListenable(ev, "Event", opts.Context)
             else
                 data:AddSubscribableEvent(ev, opts.Preventable)
@@ -91,7 +93,7 @@ function Library.Create(modTable, id, data)
         ---@cast opts Library.Hook
         if opts.Legacy == false or data.USE_LEGACY_HOOKS == false then
             -- Check if context is invalid
-            if opts.Context and ((opts.Context == "Client" and Ext.IsServer()) or (opts.Context == "Server" and Ext.IsClient())) then
+            if opts.Context and ((opts.Context == "Client" and _IsServer) or (opts.Context == "Server" and _IsClient)) then
                 data.Events[hook] = CreateInvalidListenable(hook, "Hook", opts.Context)
             else
                 data:AddSubscribableHook(hook, opts.Preventable)
@@ -101,7 +103,7 @@ function Library.Create(modTable, id, data)
         end
     end
     -- Initialize PersistentVars - TODO rename it
-    if Ext.IsServer() then
+    if _IsServer then
         if not PersistentVars.Features[data.__ModTable] then
             PersistentVars.Features[data.__ModTable] = {}
         end
@@ -420,7 +422,7 @@ end
 -- PERSISTENCE
 ---------------------------------------------
 
-if Ext.IsServer() then
+if _IsServer then
     ---Returns the feature's PersistentVars table.
     ---@return table
     function Library:GetPersistentVariables()
@@ -610,7 +612,7 @@ end
 ---------------------------------------------
 
 -- Initialize persistent vars.
-if Ext.IsServer() then
+if _IsServer then
     if not PersistentVars.Features then
         PersistentVars.Features = {}
     end

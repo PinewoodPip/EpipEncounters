@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class Feature_EpicEnemies : Feature
 local EpicEnemies = {
     ---@type Features.EpicEnemies.EffectCategory[]
@@ -142,7 +144,7 @@ end
 function _EpicEnemiesEffect:GetWeight()
     local weight = self.DefaultWeight or self.Weight
 
-    if Ext.IsClient() then
+    if _IsClient then
         weight = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, self.ID)
 
         if self.Category then

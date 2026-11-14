@@ -1,4 +1,6 @@
 
+local _IsClient = Ext.IsClient()
+
 ---@class Feature_DebugMenu : Feature
 local DebugMenu = {
     NETMSG_LIBRARY_STATE_CHANGED = "Features.ControlPanel.NetMsg.LibraryStateChanged",
@@ -163,7 +165,7 @@ function DebugMenu.GetState(modTable, featureID)
     else -- Initialize state
         state = {Debug = false, ShutUp = false, Enabled = true, DateTested = "Never", VersionTested = -1, TestsPassed = 0, ModTable = modTable, ID = featureID} ---@type DebugMenu_State
 
-        if modTable == "_Client" and Ext.IsClient() then
+        if modTable == "_Client" and _IsClient then
             state.Library = Client.UI[featureID]
         end
 
@@ -240,7 +242,7 @@ function DebugMenu.SetEnabledState(modTable, featureID, enabled)
 
     state:GetFeature():SetEnabled("DebugMenu", enabled)
 
-    if Ext.IsClient() then
+    if _IsClient then
         Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {
             ModTableID = modTable,
             ID = featureID,
@@ -259,7 +261,7 @@ function DebugMenu.SetDebugState(modTable, featureID, enabled)
 
     state:GetFeature().__IsDebug = enabled
 
-    if Ext.IsClient() then
+    if _IsClient then
         Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {
             ModTableID = modTable,
             ID = featureID,
@@ -278,7 +280,7 @@ function DebugMenu.SetLoggingState(modTable, featureID, level)
 
     state:GetFeature().Logging = level
 
-    if Ext.IsClient() then
+    if _IsClient then
         Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {
             ModTableID = modTable,
             ID = featureID,
