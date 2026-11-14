@@ -597,6 +597,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/AutoUnlockInventory"},
     {Script = "Epip/DelayTurnKeybind/Client.lua"},
     {Script = "Epip/FreeMovementConstraint/Client.lua"},
+    {Script = "Epip/HoldToEndTurn/Client.lua"},
     {ScriptSet = "Epip/DiscordRichPresence"},
 
     "Epip/ShowConsumableEffects.lua",

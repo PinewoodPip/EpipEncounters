@@ -23,6 +23,7 @@ local FastForwardDialogue = Epip.GetFeature("Features.FastForwardDialogue")
 local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
 local TurnNotifications = Epip.GetFeature("Features.TurnNotifications")
 local ChatNotificationSound = Epip.GetFeature("ChatNotificationSound")
+local HoldToEndTurn = Epip.GetFeature("Features.HoldToEndTurn")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
@@ -455,6 +456,7 @@ local tabs = {
             {Type = "Setting", Module = "Epip_Inventory", ID = "Inventory_InfiniteCarryWeight"},
             CreateLegacySettingEntry("RenderShroud"),
             CreateLegacySettingEntry("Feature_WalkOnCorpses"),
+            CreateSettingEntry(HoldToEndTurn.Settings.HoldDuration),
         }
     },
     ["Epip_Developer"] = {
