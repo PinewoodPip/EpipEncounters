@@ -1,4 +1,8 @@
 
+local TextDisplay = Client.UI.TextDisplay
+local Tooltip = Client.Tooltip
+local Input = Client.Input
+
 ---@type Feature
 local MovementCosts = {
     TSKHANDLE_AP_COST = "h984df648geba3g4eaagb035g2088d0e58f72", -- "[1]AP"
@@ -20,7 +24,7 @@ Epip.RegisterFeature("TooltipAdjustments.MovementCosts", MovementCosts)
 -- METHODS
 ---------------------------------------------
 
----Modifies a movement cost tooltip to show partial AP costs and remaining free movement..
+---Modifies a movement cost tooltip to show partial AP costs and remaining free movement.
 ---@param text string
 ---@return string? `nil` if the passed text is not a movement cost tooltip.
 function MovementCosts._GetExpandedMovementCostText(text)
@@ -61,18 +65,18 @@ end
 ---------------------------------------------
 
 -- Keep track of the current mouse text, for instant re-rendering when shift is toggled.
-Client.Tooltip.Hooks.RenderMouseTextTooltip:Subscribe(function (ev)
+Tooltip.Hooks.RenderMouseTextTooltip:Subscribe(function (ev)
     MovementCosts._currentMouseText = ev.Text
 
     ev.Text = MovementCosts._GetExpandedMovementCostText(ev.Text) or ev.Text
 end)
-Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
+Input.Events.KeyStateChanged:Subscribe(function (ev)
     if ev.InputID == "lshift" and MovementCosts._currentMouseText then
         local label = MovementCosts._GetExpandedMovementCostText(MovementCosts._currentMouseText) or MovementCosts._currentMouseText
 
-        Client.Tooltip.ShowMouseTextTooltip(label)
+        Tooltip.ShowMouseTextTooltip(label)
     end
 end)
-Client.UI.TextDisplay.Events.TextRemoved:Subscribe(function (_)
+TextDisplay.Events.TextRemoved:Subscribe(function (_)
     MovementCosts._currentMouseText = nil
 end)
