@@ -241,7 +241,7 @@ end
 ---Translates world coordinates to screen position.
 ---@param worldPosition Vector3
 ---@param playerIndex integer? Defaults to `1`.
----@return Vector2
+---@return Vector2, number -- Screen position, depth of the world position (relative to camera pos)
 function Client.WorldPositionToScreen(worldPosition, playerIndex)
     local camera = Client.Camera.GetPlayerCamera(playerIndex)
     local proj = camera.Camera.ViewProjection
@@ -258,7 +258,7 @@ function Client.WorldPositionToScreen(worldPosition, playerIndex)
     local screenX = (screenProjection[1] / screenProjection[4] + 1) * 0.5 * vp[1] + vp[3]
     local screenY = vp[2] - (screenProjection[2] / screenProjection[4] + 1) * 0.5 * vp[2] + vp[4]
 
-    return Vector.Create(screenX, screenY)
+    return Vector.Create(screenX, screenY), screenProjection[3]
 end
 
 ---Returns whether the cursor is over any UIObject.

@@ -163,7 +163,10 @@ function UIFactory._SetCharacter(instance, char)
         local pos = Vector.Create(uiChar.WorldPos)
         pos = pos + V(0, uiChar.Height + UIFactory.CHARACTER_POS_Y_OFFSET, 0)
 
-        local uiPos = Client.WorldPositionToScreen(pos) + UIFactory.UI_OFFSET
+        local worldPos, depth = Client.WorldPositionToScreen(pos)
+        local uiPos = worldPos + UIFactory.UI_OFFSET
+        uiObject.RenderOrder = (-depth * 10) // 1 -- Sort overheads by proximity to the camera. Only refreshes when the UI is shown, not when moving the camera - TODO
+
         local uiWidth = instance.Root:GetWidth() * instance:GetScaleMultiplier()
         uiObject:SetPosition(math.floor(uiPos[1] - uiWidth / 2), math.floor(uiPos[2]))
 
