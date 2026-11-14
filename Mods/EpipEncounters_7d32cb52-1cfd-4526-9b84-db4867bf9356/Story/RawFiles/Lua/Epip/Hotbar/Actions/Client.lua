@@ -1,4 +1,6 @@
 
+local MonotonicTime = Ext.Utils.MonotonicTime
+
 ---@class Feature_HotbarActions
 local Actions = Epip.GetFeature("Feature_HotbarActions")
 
@@ -44,7 +46,7 @@ function Actions.SetActionCooldown(action, cooldown)
     end
 
     Actions._ActionCooldowns[action] = {
-        Time = Ext.Utils.MonotonicTime(),
+        Time = MonotonicTime(),
         Cooldown = cooldown,
     }
 end
@@ -60,7 +62,7 @@ function Actions.IsActionOnCooldown(action)
     local onCooldown = false
 
     if lastUse then
-        local timePassed = (Ext.Utils.MonotonicTime() - lastUse.Time) / 1000 -- In seconds.
+        local timePassed = (MonotonicTime() - lastUse.Time) / 1000 -- In seconds.
 
         if timePassed < lastUse.Cooldown then
             onCooldown = true

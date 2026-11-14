@@ -7,6 +7,7 @@ local Flash = Client.Flash
 local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 local HandleToDouble = Ext.UI.HandleToDouble
 local Input = Client.Input
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class HotbarUI : UI
 ---@field Actions table<string, HotbarAction>
@@ -870,7 +871,7 @@ function Hotbar.SetPreparedSkill(char, skillID, casting)
     if skillID then
         Hotbar.PreparedSkills[char.NetID] = {
             SkillID = skillID,
-            StartTime = Ext.Utils.MonotonicTime(),
+            StartTime = MonotonicTime(),
             Casting = casting,
         }
 

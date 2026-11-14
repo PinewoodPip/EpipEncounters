@@ -12,6 +12,7 @@ local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local CommonStrings = Text.CommonStrings
+local MonotonicTime = Ext.Utils.MonotonicTime
 local V = Vector.Create
 
 ---@class Feature_SettingsMenuOverlay : Feature
@@ -459,7 +460,7 @@ function UI._RenderEpipe(data)
             label:SetText(Overlay.TranslatedStrings.Notification_EpipeClicksMilestone:Format(newClicks))
         end
 
-        timeClicked = Ext.Utils.MonotonicTime()
+        timeClicked = MonotonicTime()
         isPressed = true
     end)
     element.SlotElement.Events.MouseUp:Subscribe(function (_)
@@ -468,7 +469,7 @@ function UI._RenderEpipe(data)
         icon:SetScale(V(1, 1))
 
         -- Play a release sound if the player held down the Epipe
-        if Ext.Utils.MonotonicTime() - timeClicked >= 300 then
+        if MonotonicTime() - timeClicked >= 300 then
             UI:PlaySound("UI_Game_Inventory_Visor_Close")
             Overlay:SetSettingValue(longClicksSetting, Overlay:GetSettingValue(longClicksSetting) + 1)
         end

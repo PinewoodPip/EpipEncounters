@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class Feature_DebugDisplay
 local DebugDisplay = Epip.GetFeature("EpipEncounters", "DebugDisplay")
@@ -14,7 +15,7 @@ DebugDisplay.TrackedModVersions = {
 DebugDisplay.BG_SIZE = Vector.Create(200, 240)
 DebugDisplay.PING_INTERVAL = 0.8
 DebugDisplay.MEMORY_UPDATE_INTERVAL = 0.5
-DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
+DebugDisplay.pingTime = MonotonicTime()
 
 ---------------------------------------------
 -- CLASSES
@@ -119,9 +120,9 @@ function DebugDisplay.SendPingRequest()
     local char = Client.GetCharacter() -- The client character is not set immediately upon the session going into Running.
 
     if GameState.IsInSession() and DebugDisplay.UI and char then
-        DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
+        DebugDisplay.pingTime = MonotonicTime()
     
-        Net.PostToServer("EPIPENCOUNTERS_DebugDisplay_Ping", {ClientTime = Ext.Utils.MonotonicTime(), NetID = char.NetID})
+        Net.PostToServer("EPIPENCOUNTERS_DebugDisplay_Ping", {ClientTime = MonotonicTime(), NetID = char.NetID})
     end
 end
 
@@ -131,7 +132,7 @@ end
 
 -- Listen for pings being sent back.
 Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_Ping", function (payload)
-    local now = Ext.Utils.MonotonicTime()
+    local now = MonotonicTime()
     local timeElapsed = now - payload.ClientTime
 
     if DebugDisplay:IsEnabled() then

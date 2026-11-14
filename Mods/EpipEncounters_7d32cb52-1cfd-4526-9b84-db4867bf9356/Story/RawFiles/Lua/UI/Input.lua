@@ -1,4 +1,6 @@
 
+local MonotonicTime = Ext.Utils.MonotonicTime
+
 ---@class InputUI : UI
 local Input = {
     ID = "PIP_Input",
@@ -111,7 +113,7 @@ Input:RegisterCallListener("pipInputCaptured", function(ev)
 end)
 
 Input:RegisterCallListener("pipKeyboardTextFieldCharacterAdded", function(ev, key)
-    local time = Ext.Utils.MonotonicTime()
+    local time = MonotonicTime()
 
     if key ~= Input.lastKeyboardCharacter or time - Input.lastKeyboardCharacterTime > Input.REPEAT_RATE then
         Input:DebugLog("Key pressed: " .. key)
@@ -151,11 +153,11 @@ Input:RegisterCallListener("pipKeyDown", function(_, keyCode, shiftKey, ctrlKey,
 
     if ctrlKey then
         Input.SpecialKeysPressed.CTRL = ctrlKey
-        Input.ctrlTime = Ext.Utils.MonotonicTime()
+        Input.ctrlTime = MonotonicTime()
     end
     if altKey then
         Input.SpecialKeysPressed.ALT = altKey
-        Input.altTime = Ext.Utils.MonotonicTime()
+        Input.altTime = MonotonicTime()
     end
 
     if not keyName then

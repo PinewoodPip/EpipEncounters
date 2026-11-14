@@ -8,6 +8,7 @@ local NavigationBar = Epip.GetFeature("Features.NavigationBar")
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 local CommonStrings = Text.CommonStrings
 local Input = Client.Input
+local MonotonicTime = Ext.Utils.MonotonicTime
 local V = Vector.Create
 
 ---@class Features.MeditateControllerSupport
@@ -161,7 +162,7 @@ function UI._CreateWheelPage(page)
     nav.Hooks.ConsumeInput:Subscribe(function (ev)
         if ev.Event.Timing == "Down" then
             local lastUseTime = actionLastUseTime[ev.Action.ID] or -1
-            local now = Ext.Utils.MonotonicTime()
+            local now = MonotonicTime()
             if now - lastUseTime < UI.WHEEL_SCROLL_REPEAT_RATE * 1000 then return end -- Impose a repeat rate restriction, as the default for the InputEvents is too fast.
 
             if ev.Action.ID == "Previous" then
@@ -400,10 +401,10 @@ function UI._Initialize()
             elseif ev.Action.ID == "ZoomIn" or ev.Action.ID == "ZoomOut" then
                 -- Request to change zoom level.
                 local direction = Input.GetStickPosition("Right")[2] -- Y axis.
-                local now = Ext.Utils.MonotonicTime()
+                local now = MonotonicTime()
                 if math.abs(direction) >= UI.ZOOM_STICK_THRESHOLD and (now - lastZoomTime) / 1000 >= UI.ZOOM_COOLDOWN then -- Consider deadzone and a cooldown to control "repeat rate" - the event is likely to fire so long as the stick is held due to micro-adjustments.
                     Support.RequestAdjustZoom(direction > 0 and "ZoomOut" or "ZoomIn") -- Push up for zoom-in.
-                    lastZoomTime = Ext.Utils.MonotonicTime()
+                    lastZoomTime = MonotonicTime()
                 end
                 ev.Consumed = true
             end

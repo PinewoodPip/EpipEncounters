@@ -5,6 +5,7 @@
 
 local Log = Client.UI.CombatLog
 local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class UI.CombatLog.Messages.ReflectedDamage : UI.CombatLog.Messages.Damage
 local _Reflect = {
@@ -37,7 +38,7 @@ function _Reflect.Create(charName, charColor, damageType, amount, color)
                 Amount = tonumber(amount),
                 Color = color,
                 Hits = 1,
-                HitTime = Ext.Utils.MonotonicTime(),
+                HitTime = MonotonicTime(),
             },
         },
     })

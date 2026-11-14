@@ -1,4 +1,6 @@
 
+local MonotonicTime = Ext.Utils.MonotonicTime
+
 ---@class Feature_Vanity
 local Vanity = Epip.GetFeature("Feature_Vanity")
 
@@ -16,7 +18,7 @@ Vanity._ITEM_REFRESH_COOLDOWN = 300 -- In milliseconds.
 ---@param useAlternativeStatus boolean
 function Vanity.TryRefreshAppearance(char, item, useAlternativeStatus)
     local lastRefreshTime = Vanity._LastItemRefreshTime[item.Handle] or 0
-    local now = Ext.Utils.MonotonicTime()
+    local now = MonotonicTime()
     if now - lastRefreshTime >= Vanity._ITEM_REFRESH_COOLDOWN then
         Vanity._LastItemRefreshTime[item.Handle] = now
         Vanity.RefreshAppearance(char, useAlternativeStatus)

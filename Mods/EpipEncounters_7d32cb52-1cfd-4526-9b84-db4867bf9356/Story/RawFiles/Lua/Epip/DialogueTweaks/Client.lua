@@ -5,6 +5,7 @@
 
 local PlayerInfo = Client.UI.PlayerInfo
 local Notification = Client.UI.Notification
+local MonotonicTime = Ext.Utils.MonotonicTime
 local V = Vector.Create
 
 ---@type Feature
@@ -125,12 +126,12 @@ function DialogueTweaks._ListenToPlayer(targetChar)
     local targetCharHandle = targetChar.Handle
     local flashHandle = Ext.UI.HandleToDouble(targetChar.Handle)
     targetChar = Character.Get(targetCharHandle)
-    local requestStartTime = Ext.Utils.MonotonicTime()
+    local requestStartTime = MonotonicTime()
 
     PlayerInfo:ExternalInterfaceCall("onCharOver", flashHandle)
 
     GameState.Events.RunningTick:Subscribe(function (_)
-        local timeElapsed = (Ext.Utils.MonotonicTime() - requestStartTime) / 1000
+        local timeElapsed = (MonotonicTime() - requestStartTime) / 1000
         local playerState = Ext.UI.GetUIObjectManager().PlayerStates[1]
         playerState.ActiveUIObjectHandle = PlayerInfo:GetUI():GetHandle()
         playerState.UIUnderMouseCursor = true

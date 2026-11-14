@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Log = Client.UI.CombatLog
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class UI.CombatLog.Messages.SurfaceDamage : UI.CombatLog.Messages.Damage
 local _Surface = {
@@ -34,7 +35,7 @@ function _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
                 Amount = tonumber(dmgAmount),
                 Color = dmgColor,
                 Hits = 1,
-                HitTime = Ext.Utils.MonotonicTime(),
+                HitTime = MonotonicTime(),
             },
         },
     })

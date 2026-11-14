@@ -1,4 +1,6 @@
 
+local MonotonicTime = Ext.Utils.MonotonicTime
+
 ---@class Feature_DebugDisplay : Feature
 local DebugDisplay = {
     ticks = {}, ---@type integer[] Tick tracker for current context.
@@ -12,7 +14,7 @@ Epip.RegisterFeature("DebugDisplay", DebugDisplay)
 ---------------------------------------------
 
 function DebugDisplay.AddTick()
-    local now = Ext.Utils.MonotonicTime()
+    local now = MonotonicTime()
 
     table.insert(DebugDisplay.ticks, now)
 

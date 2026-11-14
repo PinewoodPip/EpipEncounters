@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Log = Client.UI.CombatLog
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class UI.CombatLog.Messages.AbsorbedDamage : UI.CombatLog.Messages.Damage
 local _AbsorbedMessage = {
@@ -34,7 +35,7 @@ function _AbsorbedMessage:Create(charName, charColor, damageType, amount, color)
                 Amount = tonumber(amount),
                 Color = color,
                 Hits = 1,
-                HitTime = Ext.Utils.MonotonicTime(),
+                HitTime = MonotonicTime(),
             },
         },
     })

@@ -1,6 +1,7 @@
 
 local Notification = Client.UI.Notification
 local Input = Client.Input
+local MonotonicTime = Ext.Utils.MonotonicTime
 local V = Vector.Create
 
 ---@class Features.QuickLoot
@@ -305,7 +306,7 @@ function QuickLoot.StartSearch(char, isStealing)
 
     ---@type Features.QuickLoot.Search
     local search = {
-        StartTime = Ext.Utils.MonotonicTime(),
+        StartTime = MonotonicTime(),
         EffectHandle = effectHandle,
         MultiVisualHandle = multiVisualHandle,
     }
@@ -356,7 +357,7 @@ function QuickLoot.GetSearchRadius(char)
     local search = QuickLoot._Searches[char.Handle]
     if not search then QuickLoot:__Error("GetSearchRadius", "Character is not searching") end
 
-    local endTime = search.EndTime or Ext.Utils.MonotonicTime()
+    local endTime = search.EndTime or MonotonicTime()
     local elapsedSeconds = (endTime - search.StartTime) / 1000
     local radius = QuickLoot.GetBaseSearchRadius() + elapsedSeconds * QuickLoot.SEARCH_RADIUS_PER_SECOND
     radius = math.min(QuickLoot.MAX_SEARCH_DISTANCE, radius)
@@ -376,7 +377,7 @@ function QuickLoot.StopSearch(char)
     local searchRadius = QuickLoot.GetSearchRadius(char)
     local containers, corpses = QuickLoot.GetContainers(char.WorldPos, searchRadius)
     local groundItems = QuickLoot.GetGroundItems(char.WorldPos, searchRadius)
-    search.EndTime = Ext.Utils.MonotonicTime()
+    search.EndTime = MonotonicTime()
     search.Containers = Entity.EntityListToHandles(containers)
 
     Net.PostToServer(QuickLoot.NETMSG_GENERATE_TREASURE, {
@@ -505,7 +506,7 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
         ev:Prevent() -- Block pause menu.
     elseif ev.InputID == "right2" and ev.State == "Released" then
         local search = QuickLoot.GetSearch(char)
-        if Ext.Utils.MonotonicTime() - search.StartTime > 100 then
+        if MonotonicTime() - search.StartTime > 100 then
             QuickLoot.CancelSearch(char)
         end
     end

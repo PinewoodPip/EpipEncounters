@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local CommonStrings = Text.CommonStrings
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class CombatLogUI : UI
 ---@field Messages UI.CombatLog.ParsedMessage[]
@@ -269,7 +270,7 @@ function Log.AddMessage(msg, filter)
     local obj = {
         Message = msg,
         Filter = filter,
-        Time = Ext.Utils.MonotonicTime(),
+        Time = MonotonicTime(),
     }
 
     ---@type UI.CombatLog.ParsedMessage
@@ -278,7 +279,7 @@ function Log.AddMessage(msg, filter)
 
     -- Attempt to merge message with the immediate previous one
     if lastMessage then
-        local timeElapsed = Ext.Utils.MonotonicTime() - lastMessage.Time
+        local timeElapsed = MonotonicTime() - lastMessage.Time
         timeElapsed = timeElapsed / 1000
         if lastMessage.Message:GetClassName() == msg:GetClassName() and timeElapsed < Log.MAX_MERGING_TIME then -- Messages must be of the same type and recent
             local canMerge = Log.Hooks.MessageCanMerge:Throw({
@@ -303,7 +304,7 @@ function Log.AddMessage(msg, filter)
 
         Log:DebugLog("Appending messages of type " .. lastMessage.Message:GetClassName())
 
-        lastMessage.Time = Ext.Utils.MonotonicTime() -- Update time.
+        lastMessage.Time = MonotonicTime() -- Update time.
 
         msgElement.text = Log.StringifyMessage(lastMessage.Message)
         msgElement.text_txt.htmlText = msgElement.text

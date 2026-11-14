@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Log = Client.UI.CombatLog
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class UI.CombatLog.Messages.Attack : UI.CombatLog.Messages.Damage
 ---@field TargetCharacter string
@@ -44,7 +45,7 @@ function _Attack:Create(charName, charColor, targetName, targetColor, dmgType, d
                 Amount = dmgAmount,
                 Color = dmgColor,
                 Hits = 1,
-                HitTime = Ext.Utils.MonotonicTime(),
+                HitTime = MonotonicTime(),
             },
         },
     })

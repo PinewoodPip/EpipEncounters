@@ -1,5 +1,6 @@
 
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
+local MonotonicTime = Ext.Utils.MonotonicTime
 
 ---@class ProfilingLib : Library
 Profiling = {
@@ -40,7 +41,7 @@ Profiling:RegisterClass("Session", Session)
 function Session.Create(data)
     local instance = Session:__Create(data) ---@cast instance ProfilingLib.Session
 
-    instance.StartTime = data.StartTime or Ext.Utils.MonotonicTime()
+    instance.StartTime = data.StartTime or MonotonicTime()
     instance.Steps = {}
     instance.SubSessions = {}
     instance._StepCount = 0
@@ -83,7 +84,7 @@ end
 
 ---Ends the session and sets the end time.
 function Session:End()
-    self.EndTime = Ext.Utils.MonotonicTime()
+    self.EndTime = MonotonicTime()
 end
 
 ---Returns the end time stamp of the last step,
@@ -160,7 +161,7 @@ function Profiling.Step(name)
         ID = name or "Unnamed",
     })
     step.StartTime = session:GetLastStepTimeStamp()
-    step.EndTime = Ext.Utils.MonotonicTime()
+    step.EndTime = MonotonicTime()
 
     session:AddStep(step)
 end
