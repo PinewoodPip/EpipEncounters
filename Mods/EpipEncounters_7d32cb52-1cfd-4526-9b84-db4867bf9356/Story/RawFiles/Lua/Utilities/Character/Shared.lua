@@ -83,13 +83,37 @@ Character = {
     },
 
     -- EclCharacterTask type IDs.
-    -- Incomplete! TODO
     CHARACTER_TASKS = {
         MOVE = 0,
+        MOVING = 1,
         ATTACK = 2,
+        USE_SKILL = 3,
+        TALK = 4,
+        ITEM_USE_REMOTE = 5,
         USE_ITEM = 6,
         DRAG_ITEM = 7, -- Occurs while dragging items from UIs.
+        DROP_ITEM = 8,
+        ITEM_INTERACT = 9, -- From controller interaction search mode(?)
         MOVE_ITEM = 10,
+        MOVE_ITEM_DUMMY = 11,
+        COMBINE_ITEM = 12,
+        COMBINE_ITEM_DUMMY = 13,
+        TOGGLE_SHEATHE = 14,
+        IDENTIFY = 15,
+        REPAIR = 16,
+        LOCKPICK = 17,
+        DISARM_TRAP = 18,
+        PICKPOCKET = 19,
+        LISTEN = 20,
+        GM_DRAG_TO_SPAWN = 21,
+        GM_SPAWN = 22,
+        GM_SPAWN_SURFACE = 23,
+        LOOT_CORPSE = 24,
+        CONTROLLER_MOVE = 25, -- Joystick movement.
+        CHARACTER_MOVE = 26, -- Click-and-hold movement(?)
+        GM_TARGET = 27,
+        GM_SET_START_POINT = 28,
+        DEFAULT_TARGET_ACTION = 29,
     },
 
     ---@type table<tag, Race>
