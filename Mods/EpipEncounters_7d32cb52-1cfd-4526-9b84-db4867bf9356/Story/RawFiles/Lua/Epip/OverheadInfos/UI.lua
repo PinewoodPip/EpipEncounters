@@ -79,6 +79,10 @@ function UIFactory._Create()
     local instance = Generic.Create(instanceID) ---@cast instance Features.OverheadInfos.UIFactory.Instance
     instance:TogglePlayerInput(false)
 
+    -- Position overheads below all other UIs.
+    local uiObj = instance:GetUI()
+    uiObj.Layer = 1
+
     local bg = instance:CreateElement("BG", "GenericUI_Element_TiledBackground")
     bg:SetBackground("Black", UIFactory.UI_SIZE:unpack())
     bg:SetAlpha(UIFactory.UI_ALPHA)
