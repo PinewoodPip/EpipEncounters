@@ -223,7 +223,7 @@ function Transmog.GetValidTemplates()
         local itemSlot = nil ---@type ItemSlot?
         for _,equipment in ipairs(template.Equipment.VisualResources) do
             if equipment ~= "" then
-                hasVisuals = true -- TODO weapons
+                hasVisuals = true
             end
         end
 

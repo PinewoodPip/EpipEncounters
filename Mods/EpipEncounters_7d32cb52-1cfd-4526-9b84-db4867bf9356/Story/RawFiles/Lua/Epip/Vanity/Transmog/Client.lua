@@ -791,6 +791,7 @@ Transmog.Hooks.GetTemplateTags:Subscribe(function(ev)
     if templateEntry.Mod then
         tags[templateEntry.Mod] = true
     end
+    ev.Tags = tags
 end, {StringID = "DefineImplementation"})
 
 -- Register templates when the session loads.

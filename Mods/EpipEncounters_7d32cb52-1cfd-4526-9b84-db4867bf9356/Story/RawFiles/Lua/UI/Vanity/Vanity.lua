@@ -67,6 +67,10 @@ local Vanity = {
             Name = "Common",
             Tags = {Common = true, Tool = true, Starter = true,}
         },
+        Unique = {
+            Name = "Unique",
+            Tags = {Unique = true}
+        },
 
         -- WEAPONS
         OneHandedSwords = {
@@ -140,12 +144,11 @@ local Vanity = {
             Slots = {Weapon = true},
             Tags = {Shield = true},
         },
-        
+
         Other = {
             Name = "Other",
             Tags = {
                 REF = true,
-                Unique = true,
                 Other = true, -- Fallback tag for items with 0 tags
             },
         },
@@ -159,6 +162,7 @@ local Vanity = {
         "Leather",
         "Mage",
         "Common",
+        "Unique",
 
         "OneHandedSwords",
         "TwoHandedSwords",
@@ -210,13 +214,28 @@ local Vanity = {
 
         Common = "Common",
         Civilian = "Common",
+        Clothing = "Common",
         Broom = "Common",
         Bucket = "Common", -- lol
         Tool = "Common",
         FUR = "Common",
         TOOL = "Common",
+        HAR = "Common", -- Used by fishing rods.
+        Turret = "Unique",
         Unique = "Unique",
+        UNIQUE = "Unique",
+        SourceCollar = "Unique",
+        Shapeshifter = "Unique",
+        SPECIAL = "Unique",
+        Avatar = "Unique", -- Used by Polymorph equipment.
+        Wings = "Unique",
+        VR_Goggles = "Unique",
+        Origins = "Unique",
+        Magister = "Unique",
         REF = "Reference",
+        QUEST = "Unique",
+        Quest = "Unique",
+        DONOTUSE = "Other",
 
         -- Weapons
         Sword = "Sword",
@@ -282,15 +301,29 @@ local Vanity = {
         ["Tool_"] = "",
         ["Clothing_"] = "",
         ["Maj_"] = "",
+        ["CROSSBOW"] = "Crossbow",
+        ["SWORD"] = "Sword",
+        ["RAPIER"] = "Rapier",
+        ["SPEAR"] = "Spear",
+        ["DONOTUSE"] = "", -- Kinda hides the warning but oh well. These will be tagged as Other anyways
+        ["UNIQUE"] = "",
+        ["ARM"] = "",
+        ["_S_"] = "",
+        ["CoS"] = "",
+        ["^QUEST"] = "",
+        ["^PIP"] = "",
         ["ARM_UNIQUE_ARX"] = "", -- Fuck this one, screws the pascalcase pattern
         ["^UNI_"] = "", -- "Unique"
         ["^RC_"] = "", -- "Reaper's Coast"
         ["^AMER_UNI_"] = "", -- EE Artifacts.
         ["^AMER_ORI_"] = "", -- Uniques added by EE Origins.
-        ["^ARM_SETS_"] = "", -- "Armor Set"
+        ["_?ARM_SETS_"] = "", -- "Armor Set"
+        ["CAS03"] = "", -- From armor sets.
+        ["VUL00"] = "", -- From armor sets.
+        ["%d%d%d"] = "", -- Some armor sets have dubious suffixes like "000"
         ["^REF_"] = "", -- Reference models.
         ["^LOOT_"] = "",
-        ["^S_"] = "", -- No idea what this prefix could stand for. Found on some FTJ items.
+        ["^S_"] = "", -- No idea what this prefix could stand for. Found on some FTJ items, and 1 GB5 armor piece
 
         -- Actual keywords
         ["Upperbody"] = "Chest",
