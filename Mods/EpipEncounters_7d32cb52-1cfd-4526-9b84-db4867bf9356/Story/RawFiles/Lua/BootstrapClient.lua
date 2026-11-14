@@ -892,14 +892,13 @@ LOAD_ORDER = {
         },
     },
 
-    -- BH Overheads
+    -- Overhead infos
     {
         Scripts = {
-            "Epip/BHOverheads/Shared.lua",
-            "Epip/BHOverheads/Client.lua",
-            "Epip/BHOverheads/UI.lua",
+            "Epip/OverheadInfos/Shared.lua",
+            "Epip/OverheadInfos/Client.lua",
+            "Epip/OverheadInfos/UI.lua",
         },
-        RequiresEE = true,
     },
 
     {ScriptSet = "Epip/HotbarPersistence"},
