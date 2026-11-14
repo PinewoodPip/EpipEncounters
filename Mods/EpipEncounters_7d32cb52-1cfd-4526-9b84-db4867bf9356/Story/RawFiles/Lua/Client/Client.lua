@@ -1,4 +1,7 @@
 
+local GetPlayerManager = Ext.Entity.GetPlayerManager
+local GetViewportSize = Ext.UI.GetViewportSize
+
 ---@class ClientLib : Library
 Client = {
     UI = {GM = {}, Controller = {}},
@@ -135,9 +138,8 @@ end
 ---@return EclCharacter
 function Client.GetCharacter(playerIndex)
     playerIndex = playerIndex or 1
-    local playerManager = Ext.Entity.GetPlayerManager()
+    local playerManager = GetPlayerManager()
     local char = Character.Get(playerManager.ClientPlayerData[playerIndex].CharacterNetId) ---@type EclCharacter
-
     return char
 end
 
@@ -146,8 +148,7 @@ end
 ---@return GUID
 function Client.GetProfileGUID(playerIndex)
     playerIndex = playerIndex or 1
-    local playerManager = Ext.Entity.GetPlayerManager()
-
+    local playerManager = GetPlayerManager()
     return playerManager.ClientPlayerData[playerIndex].ProfileGuid
 end
 
@@ -156,7 +157,6 @@ end
 function Client.IsInGameplayState()
     local state = Ext.Client.GetGameState()
     local STATES = Client.GAME_STATES
-
     return state == STATES.LOAD_SESSION or state == STATES.RUNNING or state == STATES.PREPARE_RUNNING
 end
 
@@ -207,7 +207,7 @@ end
 ---Returns whether the game is in local co-op mode.
 ---@return boolean
 function Client.IsLocalCoop()
-    local playerManager = Ext.Entity.GetPlayerManager()
+    local playerManager = GetPlayerManager()
     local playerCount = table.getKeyCount(playerManager.Players)
     return playerCount >= 2 -- Should never be 3+, as support for more players appears scrapped.
 end
@@ -228,7 +228,7 @@ end
 ---Returns the viewport size.
 ---@return Vector2
 function Client.GetViewportSize()
-    return Vector.Create(Ext.UI.GetViewportSize())
+    return Vector.Create(GetViewportSize())
 end
 
 ---Returns the UI scale preference of the user.
