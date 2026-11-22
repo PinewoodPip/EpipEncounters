@@ -21,7 +21,7 @@ UIFactory.CHARACTER_POS_Y_OFFSET = 0.5
 UIFactory.UI_OFFSET = V(0, -40)
 UIFactory.ICON_SIZE = V(40, 40)
 UIFactory.FADED_ICON_ALPHA = 0.75 -- Alpha for when stack requirement for T3 is not met
-UIFactory.HEALTHBAR_SCALE = 0.5
+UIFactory.HEALTHBAR_SCALE = V(0.35, 0.5)
 UIFactory.BARS_X_OFFSET = 25
 UIFactory.BAR_HEIGHT = 15
 UIFactory.VITALITY_BAR_WIDTH = 350
@@ -127,10 +127,10 @@ function UIFactory._Create()
 
     local healthBarFrame = healthBarContainer:AddChild("Health.Frame", "GenericUI_Element_Texture")
     healthBarFrame:SetTexture(Textures.BARS.ENEMY_HEALTH_BAR.FRAMES.NORMAL)
-    healthBarContainer:SetScale(V(HEALTHBAR_SCALE, HEALTHBAR_SCALE))
+    healthBarContainer:SetScale(HEALTHBAR_SCALE)
 
     -- Battered icon
-    local BATTERED_ICON_OFFSET = -UIFactory.ICON_SIZE[1] / 2 - 3
+    local BATTERED_ICON_OFFSET = -UIFactory.ICON_SIZE[1] / 2 - 6
     local batteredIconElement = root:AddChild("Battered", "GenericUI_Element_IggyIcon")
     batteredIconElement:SetPosition(healthBarContainer:GetPosition())
     batteredIconElement:Move(BATTERED_ICON_OFFSET, 0)
@@ -138,7 +138,7 @@ function UIFactory._Create()
 
     local harriedIconElement = root:AddChild("Harried", "GenericUI_Element_IggyIcon")
     harriedIconElement:SetPosition(healthBarContainer:GetPosition())
-    harriedIconElement:Move(healthBarContainer:GetWidth() + 3, 0)
+    harriedIconElement:Move(healthBarContainer:GetWidth() + 12, 0)
     harriedIconElement:SetVisible(_IsEpicEncounters)
 
     instance.BatteredIcon = batteredIconElement
