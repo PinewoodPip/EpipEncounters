@@ -25,6 +25,7 @@ local TurnNotifications = Epip.GetFeature("Features.TurnNotifications")
 local ChatNotificationSound = Epip.GetFeature("ChatNotificationSound")
 local HoldToEndTurn = Epip.GetFeature("Features.HoldToEndTurn")
 local ScrollablePlayerInfo = Epip.GetFeature("Features.ScrollablePlayerInfo")
+local ScrollableTradePortraits = Epip.GetFeature("Features.ScrollableTradePortraits")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
@@ -415,6 +416,10 @@ local tabs = {
             -- Examine
             CreateHeader(CommonStrings.ExamineUI),
             {Type = "Setting", Module = "EpipEncounters", ID = "ExaminePosition"},
+
+            -- Trade
+            CreateHeader(CommonStrings.TradeUI),
+            CreateSettingEntry(ScrollableTradePortraits.Settings.Enabled),
 
             -- Chat
             CreateHeader(CommonStrings.Chat),

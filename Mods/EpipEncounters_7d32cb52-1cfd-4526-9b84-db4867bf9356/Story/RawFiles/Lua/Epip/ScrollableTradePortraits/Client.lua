@@ -23,11 +23,38 @@ local Scrolling = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+            Handle = "h59acab52g8aaag4c27g879agdeae0a10a921",
+            Text = "Scrollable Trade UI Player Portraits",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_Enabled_Description = {
+            Handle = "hbef529beg5c9dg464egb966g676113fa5c93",
+            Text = "If enabled, the player portraits in the Trade UI will become scrollable with the mouse wheel and scroll buttons, if the party has >4 members.",
+            ContextDescription = [[Tooltip for "Scrollable Trade UI Player Portraits" setting]],
+        },
+    },
+
+    Settings = {},
+
     Events = {
         Scrolled = {}, ---@type Event<{Delta: number}>
     },
 }
 Epip.RegisterFeature("Features.ScrollableTradePortraits", Scrolling)
+local TSK = Scrolling.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+local EnabledSetting = Scrolling:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = TSK.Setting_Enabled_Name,
+    Description = TSK.Setting_Enabled_Description,
+    DefaultValue = true,
+})
 
 ---------------------------------------------
 -- METHODS
@@ -143,6 +170,7 @@ end
 ---------------------------------------------
 
 -- Scroll portraits when mouse wheel is scrolled while hovering over them.
+local _IsUsingMouseAndKeyboard = nil
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     local moveDir = Scrolling._ScrollWheelToDir[ev.InputID]
     if moveDir and Scrolling.IsMouseWithinScrollArea() then
@@ -151,10 +179,16 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
         end
         ev:Prevent()
     end
-end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse})
+end, {EnabledFunctor = function ()
+    if _IsUsingMouseAndKeyboard == nil then
+        _IsUsingMouseAndKeyboard = Client.IsUsingKeyboardAndMouse()
+    end
+    return _IsUsingMouseAndKeyboard and EnabledSetting:GetValue() == true
+end})
 
 -- Update portrait masking and scroll to bring the active character into view when the UI is opened.
 Trade:RegisterCallListener("setAnchor", function (_, _, _, _)
+    if EnabledSetting:GetValue() == false then return end
     Ext.OnNextTick(function ()
         Scrolling.SetScroll(0) -- Reset to left-most portrait first
         Scrolling.ScrollToCharacter(Client.GetCharacter())

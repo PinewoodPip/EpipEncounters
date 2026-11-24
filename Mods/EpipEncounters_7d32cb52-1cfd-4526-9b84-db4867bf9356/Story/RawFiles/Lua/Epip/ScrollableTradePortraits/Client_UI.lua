@@ -6,6 +6,7 @@ local Trade = Client.UI.Trade
 
 ---@class Features.ScrollableTradePortraits
 local Scrolling = Epip.GetFeature("Features.ScrollableTradePortraits")
+local EnabledSetting = Scrolling.Settings.Enabled ---@type SettingsLib_Setting_Boolean
 
 ---@class Features.ScrollableTradePortraits.Overlay : GenericUI_Instance
 local Overlay = Generic.Create("Features.ScrollableTradePortraits")
@@ -97,6 +98,8 @@ end
 
 -- Show the overlay when the Trade UI is opened.
 Trade:RegisterCallListener("setAnchor", function (ev)
+    if EnabledSetting:GetValue() == false then return end
+
     -- We must disable the modal flag to allow the overlay's buttons to be used.
     local ui = ev.UI
     ui.OF_PlayerModal1 = false
