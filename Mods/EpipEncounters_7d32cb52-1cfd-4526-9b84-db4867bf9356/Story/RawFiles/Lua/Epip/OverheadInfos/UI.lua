@@ -19,7 +19,7 @@ UIFactory.UI_SIZE = V(100, 50)
 UIFactory.UI_ALPHA = 0
 UIFactory.CHARACTER_POS_Y_OFFSET = 0.5
 UIFactory.UI_OFFSET = V(0, -40)
-UIFactory.ICON_SIZE = V(40, 40)
+UIFactory.ICON_SIZE = V(32, 32)
 UIFactory.FADED_ICON_ALPHA = 0.75 -- Alpha for when stack requirement for T3 is not met
 UIFactory.HEALTHBAR_SCALE = V(0.35, 0.5)
 UIFactory.BARS_X_OFFSET = 25
@@ -97,6 +97,7 @@ function UIFactory._Create()
 
     -- Health bar container
     local healthBarContainer = root:AddChild("HealthBarContainer", "GenericUI_Element_Empty")
+    healthBarContainer:Move(12, 0)
 
     -- Black background behind the bars; also serves as a divider between the armor bars
     local healthBarBg = healthBarContainer:AddChild("Health.Background", "GenericUI_Element_Color")
@@ -130,7 +131,7 @@ function UIFactory._Create()
     healthBarContainer:SetScale(HEALTHBAR_SCALE)
 
     -- Battered icon
-    local BATTERED_ICON_OFFSET = -UIFactory.ICON_SIZE[1] / 2 - 6
+    local BATTERED_ICON_OFFSET = -UIFactory.ICON_SIZE[1] / 2
     local batteredIconElement = root:AddChild("Battered", "GenericUI_Element_IggyIcon")
     batteredIconElement:SetPosition(healthBarContainer:GetPosition())
     batteredIconElement:Move(BATTERED_ICON_OFFSET, 0)
@@ -138,14 +139,14 @@ function UIFactory._Create()
 
     local harriedIconElement = root:AddChild("Harried", "GenericUI_Element_IggyIcon")
     harriedIconElement:SetPosition(healthBarContainer:GetPosition())
-    harriedIconElement:Move(healthBarContainer:GetWidth() + 12, 0)
+    harriedIconElement:Move(healthBarContainer:GetWidth() + 3, 0)
     harriedIconElement:SetVisible(_IsEpicEncounters)
 
     instance.BatteredIcon = batteredIconElement
     instance.HarriedIcon = harriedIconElement
 
     -- Center health bar vertically
-    healthBarContainer:Move(0, batteredIconElement:GetHeight() / 2 - healthBarContainer:GetHeight() / 2 + 6)
+    healthBarContainer:Move(0, batteredIconElement:GetHeight() / 2 - healthBarContainer:GetHeight() / 2)
 
     harriedIconElement:Move(BATTERED_ICON_OFFSET, 0)
     root:Move(UIFactory.ICON_SIZE[1] * 0.5, 0)
@@ -171,7 +172,10 @@ function UIFactory._SetCharacter(instance, char)
         local uiPos = worldPos + UIFactory.UI_OFFSET
         uiObject.RenderOrder = (-depth * 10) // 1 -- Sort overheads by proximity to the camera. Only refreshes when the UI is shown, not when moving the camera - TODO
 
-        local uiWidth = instance.Root:GetWidth() * instance:GetScaleMultiplier()
+        -- The UI needs to be centered around the healthbar,
+        -- but in order to not have the Battered icon get clipped through the left edge of the stage,
+        -- the UI has a position offset in flash space that we must undo here.
+        local uiWidth = (instance.Root:GetWidth() + 20) * instance:GetScaleMultiplier()
         uiObject:SetPosition(math.floor(uiPos[1] - uiWidth / 2), math.floor(uiPos[2]))
 
         -- Update BH icons
