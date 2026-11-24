@@ -24,6 +24,7 @@ local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
 local TurnNotifications = Epip.GetFeature("Features.TurnNotifications")
 local ChatNotificationSound = Epip.GetFeature("ChatNotificationSound")
 local HoldToEndTurn = Epip.GetFeature("Features.HoldToEndTurn")
+local ScrollablePlayerInfo = Epip.GetFeature("Features.ScrollablePlayerInfo")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
@@ -488,6 +489,7 @@ local tabs = {
             CreateSettingEntry(StatusesDisplay.Settings.ShowSourceGeneration),
             CreateSettingEntry(StatusesDisplay.Settings.ShowBatteredHarried),
             CreateSettingEntry(StatusesDisplay.Settings.FilteredStatuses),
+            CreateSettingEntry(ScrollablePlayerInfo.Settings.Enabled),
         }
     },
     ["Epip_Inventory"] = {

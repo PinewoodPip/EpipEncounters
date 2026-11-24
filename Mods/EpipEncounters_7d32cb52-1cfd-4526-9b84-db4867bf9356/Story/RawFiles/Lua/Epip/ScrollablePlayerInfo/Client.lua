@@ -23,11 +23,40 @@ local Scrolling = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+            Handle = "h10f51403g805eg4cabgadefge1cd8c871ad2",
+            Text = "Scrollable Player Portraits",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_Enabled_Description = {
+            Handle = "h08add932gbacfg40f3gb5c9gddcc128292a1",
+            Text = "If enabled, the Player Portraits UI will become scrollable with the mouse wheel and a scrollbar, if the party has >4 members.",
+            ContextDescription = [[Tooltip for "Scrollable Player Portraits" setting]],
+        },
+    },
+
+    Settings = {},
+
     Events = {
         Scrolled = {}, ---@type Event<{Delta: number}>
     },
 }
 Epip.RegisterFeature("Features.ScrollablePlayerInfo", Scrolling)
+local TSK = Scrolling.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+-- Provided as a mod-compatibility consideration.
+local EnabledSetting = Scrolling:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = TSK.Setting_Enabled_Name,
+    Description = TSK.Setting_Enabled_Description,
+    DefaultValue = true,
+    RequiresReload = true, -- Due to UI overlay.
+})
 
 ---------------------------------------------
 -- METHODS
@@ -66,6 +95,7 @@ end
 
 ---Returns whether the mouse is over the PlayerInfo UI's portraits area,
 ---including gaps between unchained portraits.
+---@return boolean
 function Scrolling.IsMouseWithinScrollArea()
     -- Note: bounds check is necessary because moving the cursor to be in the gap between unchained
     -- player portraits will not cause PlayerInfo to become the active UI.
@@ -110,6 +140,7 @@ end
 ---------------------------------------------
 
 -- Allow scrolling portraits with mouse wheel while hovering over them.
+local _IsUsingKeyboardAndMouse = nil
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     local moveDir = Scrolling._ScrollWheelToDir[ev.InputID]
     if moveDir and Scrolling.IsMouseWithinScrollArea() then
@@ -118,4 +149,10 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
         end
         ev:Prevent()
     end
-end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse}) -- We don't want to run this at all in controller UI, as it doesn't consider the split 2-player layout in splitscreen.
+end, {EnabledFunctor = function ()
+    if _IsUsingKeyboardAndMouse == nil then
+        _IsUsingKeyboardAndMouse = Client.IsUsingKeyboardAndMouse()
+    end
+    -- We don't want to run this at all in controller UI, as it doesn't consider the split 2-player layout in splitscreen.
+    return _IsUsingKeyboardAndMouse and PlayerInfo:Exists() and EnabledSetting:GetValue() == true
+end})

@@ -4,6 +4,7 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local Input = Client.Input
 
 local Scrolling = Epip.GetFeature("Features.ScrollablePlayerInfo")
+local EnabledSetting = Scrolling.Settings.Enabled ---@type SettingsLib_Setting_Boolean
 
 ---@class Features.ScrollablePlayerInfo.Overlay : GenericUI_Instance
 local Overlay = Generic.Create("Features.ScrollablePlayerInfo")
@@ -104,7 +105,9 @@ GameState.Events.ClientReady:Subscribe(function (_)
     Input.Events.MouseMoved:Subscribe(function (_)
         Overlay._UpdateVisibility()
     end)
-end)
+end, {EnabledFunctor = function ()
+    return EnabledSetting:GetValue() == true
+end})
 
 -- Handle scrolling through the scrollbar handle.
 -- MouseUp event is not used as it would not be able to detect the case of releasing
